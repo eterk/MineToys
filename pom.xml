@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.eterk</groupId>
+    <artifactId>mineCode</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <scala.major.version>2.12</scala.major.version>
+        <scala.version>2.12.13</scala.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <!--    <repository>-->
+        <!--      <id>clojars</id>-->
+        <!--      <url>https://clojars.org/repo/</url>-->
+        <!--    </repository>-->
+        <!--        <repository>-->
+        <!--            <id>jitpack.io</id>-->
+        <!--            <url>https://jitpack.io</url>-->
+        <!--        </repository>-->
+        <!--        <repository>-->
+        <!--            <id>jitpack.iox</id>-->
+        <!--            <url>https://www.dcm4che.org/maven2/</url>-->
+        <!--        </repository>-->
+        <!--    <repository>-->
+        <!--      <id>xuggle repo</id>-->
+        <!--      <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>-->
+        <!--    </repository>-->
+    </repositories>
+
+
+    <dependencies>
+        <!-- 添加scala库作为依赖包 -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        <!--        use in icon colorful-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-imaging</artifactId>
+            <version>1.0-alpha2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.soualid.colorthief</groupId>
+            <artifactId>colorthief</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!--use in architecture -->
+        <dependency>
+            <groupId>com.github.scopt</groupId>
+            <artifactId>scopt_${scala.major.version}</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+
+        <!--    use in mp4->wav-->
+        <dependency>
+            <groupId>ws.schild</groupId>
+            <artifactId>jave-all-deps</artifactId>
+            <version>2.7.3</version>
+        </dependency>
+
+
+        <!-- [6](https://mvnrepository.com/artifact/batik/batik-svggen) -->
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <!-- [7](https://mvnrepository.com/artifact/batik/batik-util) -->
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-rasterizer</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-rasterizer</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.14</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 添加maven插件，用于编译，测试，运行scala代码 -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.5.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
+
