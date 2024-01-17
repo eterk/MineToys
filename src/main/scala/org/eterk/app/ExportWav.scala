@@ -1,15 +1,15 @@
 package org.eterk.app
 
+import org.eterk.util.Util
+
 import java.io.File
 
-object ExportWav {
+object ExportWav extends App {
 
-  def main(args: Array[String]): Unit = {
-    mp4ToWav("S://lib/视频/为什么城市人际生活越来越冷漠？哈贝马斯：生活世界被殖民化了！.mp4")
-  }
 
   import ws.schild.jave._
-  def audio(): AudioAttributes ={
+
+  def audio(): AudioAttributes = {
     val audio = new AudioAttributes()
     audio.setCodec("pcm_s16le")
     audio.setSamplingRate(44100)
@@ -24,6 +24,7 @@ object ExportWav {
    * 声道数：建议使用单声道的音频文件，如果使用双声道或多声道的音频文件，会自动转换为单声道，可能会导致音质下降。
    * 比特率：建议使用 16 bit 的比特率，不支持低于 8 bit 或高于 32 bit 的比特率。
    * 编码格式：建议使用 PCM，MP3，M4A，FLAC 等无损或有损压缩的编码格式，不支持 AMR，WMA，OGG 等其他编码格式。
+   *
    * @return
    */
   def funasrRecommend(): AudioAttributes = {
@@ -41,7 +42,7 @@ object ExportWav {
     audio
   }
 
-  def get(media:MultimediaObject)={
+  def get(media: MultimediaObject) = {
     // 获取 MultimediaObject 的信息，返回一个 MultimediaInfo 对象
     val multimediaInfo = media.getInfo
     // 获取 MultimediaInfo 的音频信息，返回一个 AudioInfo 对象
@@ -55,6 +56,7 @@ object ExportWav {
 
   // 定义一个函数，接受一个mp4文件名，返回一个wav文件名
   def mp4ToWav(mp4FileName: String): String = {
+    println(mp4FileName)
     // 创建一个源文件对象
     val source: File = new File(mp4FileName)
     // 创建一个目标文件对象，使用相同的文件名，但是扩展名为wav
@@ -78,5 +80,19 @@ object ExportWav {
   }
 
 
+  override def appName: String = "EXPORT WAV"
+
+  override def paramSeq: Seq[String] = Seq("input file")
+
+  override def paramDescription: Seq[String] = Seq("输入文件")
+
+  override def appDescription: String = "将mp4 导出wav 文件"
+
+  override def execute(params: String*): Unit = {
+
+    Util.filterFiles(params.head, _.endsWith(".mp4"), recursive = false).foreach(mp4ToWav)
+
+
+  }
 
 }

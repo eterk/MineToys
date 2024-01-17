@@ -9,11 +9,12 @@
     <version>1.0</version>
 
     <properties>
-        <scala.major.version>2.12</scala.major.version>
-        <scala.version>2.12.13</scala.version>
+        <scala.major.version>2.13</scala.major.version>
+        <scala.version>2.13.12</scala.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <main.class>org.eterk.Main</main.class>
     </properties>
 
 
@@ -48,6 +49,16 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.scala-lang</groupId>-->
+<!--            <artifactId>scala-reflect</artifactId>-->
+<!--            <version>${scala.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.scala-lang</groupId>-->
+<!--            <artifactId>scala-tools</artifactId>-->
+<!--            <version>${scala.version}</version>-->
+<!--        </dependency>-->
         <!--        use in icon colorful-->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -69,33 +80,41 @@
         <!--    use in mp4->wav-->
         <dependency>
             <groupId>ws.schild</groupId>
-            <artifactId>jave-all-deps</artifactId>
+            <artifactId>jave-core</artifactId>
             <version>2.7.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest -->
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.major.version}</artifactId>
+            <version>3.2.17</version>
+            <scope>test</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.plotly-scala</groupId>-->
+<!--            <artifactId>plotly-render_${scala.major.version}</artifactId>-->
+<!--            <version>0.8.4</version>-->
+<!--        </dependency>-->
 
 
         <!-- [6](https://mvnrepository.com/artifact/batik/batik-svggen) -->
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-svggen</artifactId>
+            <artifactId>batik-svgrasterizer</artifactId>
             <version>1.14</version>
         </dependency>
         <!-- [7](https://mvnrepository.com/artifact/batik/batik-util) -->
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-transcoder</artifactId>
-            <version>1.14</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-rasterizer</artifactId>
-            <version>1.14</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-rasterizer</artifactId>
-            <version>1.14</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.xmlgraphics</groupId>-->
+<!--            <artifactId>batik-transcoder</artifactId>-->
+<!--            <version>1.14</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.xmlgraphics</groupId>-->
+<!--            <artifactId>batik-rasterizer</artifactId>-->
+<!--            <version>1.14</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
@@ -105,9 +124,31 @@
 
     </dependencies>
 
+    <!-- 使用proguard-maven-plugin来对jar包进行混淆和优化 -->
+    <!--            <plugin>-->
+    <!--                <groupId>com.github.wvengen</groupId>-->
+    <!--                <artifactId>proguard-maven-plugin</artifactId>-->
+    <!--                <version>2.3.1</version>-->
+    <!--                <executions>-->
+    <!--                    <execution>-->
+    <!--                        <phase>package</phase>-->
+    <!--                        <goals>-->
+    <!--                            <goal>proguard</goal>-->
+    <!--                        </goals>-->
+    <!--                    </execution>-->
+    <!--                </executions>-->
+    <!--                <configuration>-->
+    <!--                    <obfuscate>true</obfuscate>-->
+    <!--&lt;!&ndash;                    <optimize>true</optimize>&ndash;&gt;-->
+    <!--                    <injar>${project.build.finalName}.jar</injar>-->
+    <!--                    <outjar>${project.build.finalName}-proguard.jar</outjar>-->
+    <!--                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!-- 使用maven-jar-plugin来对jar包进行压缩 -->
+
     <build>
         <plugins>
-            <!-- 添加maven插件，用于编译，测试，运行scala代码 -->
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
@@ -120,10 +161,59 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <scalaVersion>${scala.version}</scalaVersion>
-                </configuration>
             </plugin>
+            <!-- 使用maven-shade-plugin来打包jar包，并去除一些未使用的类或资源 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                                <createDependencyReducedPom>false</createDependencyReducedPom>
+                                <transformers>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <mainClass>${main.class}</mainClass>
+                                    </transformer>
+                                </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-jar-plugin</artifactId>-->
+<!--                <version>3.2.0</version>-->
+<!--                <configuration>-->
+<!--                    <archive>-->
+<!--                        <compress>true</compress>-->
+<!--                    </archive>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--            &lt;!&ndash; 使用maven-dependency-plugin来分析项目的依赖 &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <version>3.2.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>analyze</id>-->
+<!--                        <goals>-->
+<!--                            <goal>analyze-only</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <failOnWarning>true</failOnWarning>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

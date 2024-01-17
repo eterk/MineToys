@@ -1,5 +1,9 @@
 package org.eterk.app
 
+import org.eterk.util.Util
+
+import java.io.File
+
 object WavToText extends App {
 
 
@@ -8,38 +12,48 @@ object WavToText extends App {
 
   override def appName: String = "wav  to text"
 
-  override def paramSeq: Seq[String] = Seq("audio_in", "output_dir")
+  override def paramSeq: Seq[String] = Seq("audio_in")
 
-  override def paramDescription: Seq[String] = Seq("输入文件", "输出文件")
+  override def paramDescription: Seq[String] = "输入文件" :: Nil
 
   override def appDescription: String = ""
 
   override def execute(params: String*): Unit = {
-    val Seq(audio_in, output_dir) = params
+    val audio_in = params.head
+    val inputFiles =
+      Util
+        .filterFiles(audio_in, p => p.endsWith(".wav"), recursive = false)
+        .map(p => {
+          val path = "/home/data/video/"
+          val in = path + new File(p).getName
+          //          (in, Util.repalceFileFomat(in, "txt"))
+          (in, path)
+        })
 
-    // 定义你的参数
+    inputFiles.foreach(audio => {
+      println(audio)
+      callServer(audio._1, audio._2)
+    })
+
+  }
+
+
+  def callServer(audio_in: String, output_dir: String): Unit = {
     val host = "127.0.0.1"
     val port = 10095
     val mode = "offline"
     val imageID = "0250f8ef981b"
+    val containerId = s"wsl.exe docker ps -q --filter ancestor=$imageID".!!
 
-        x1("", "")
+    println(containerId)
+    // 构造你的命令
+    val cmd = s"wsl.exe docker exec $containerId python3 /workspace/FunASR/runtime/python/websocket/funasr_wss_client.py --host $host --port $port --mode $mode --audio_in $audio_in --output_dir $output_dir"
 
-//
-//    val containerId = s"wsl.exe docker ps -q --filter ancestor=$imageID".!!
-//
-//    println(containerId)
-//
-//    // 构造你的命令
-//    val cmd = s"wsl.exe docker exec $containerId python3 /workspace/FunASR/runtime/python/websocket/funasr_wss_client.py --host $host --port $port --mode $mode --audio_in $audio_in --output_dir $output_dir"
-//
-//
-//    println(cmd)
-//    // 执行你的命令
-//    val result = cmd.!!
-//
-//    println(result)
+    println(cmd)
 
+    val result = cmd.!!
+
+    println(result)
   }
 
   def x1(audio_in: String, output_dir: String) = {
@@ -51,15 +65,13 @@ object WavToText extends App {
     val port = 10095
     val mode = "offline"
     val imageID = "0250f8ef981b"
-    val audio_in = "/home/data/a.wav"
-    val output_dir = "/home/data/output"
 
-//    // 启动你的镜像
-//    val run_cmd = s"wsl.exe docker run -p $port:$port -it --privileged=true -v ~/funasr0.4.1/funasr-runtime-resources/models:/workspace/models -v /mnt/s/lib:/home/data registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr:funasr-runtime-sdk-cpu-0.4.1"
-//
-//    Thread.sleep(5000)
-//    println(run_cmd)
-//    println(run_cmd.!!)
+    //    // 启动你的镜像
+    //    val run_cmd = s"wsl.exe docker run -p $port:$port -it --privileged=true -v ~/funasr0.4.1/funasr-runtime-resources/models:/workspace/models -v /mnt/s/lib:/home/data registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr:funasr-runtime-sdk-cpu-0.4.1"
+    //
+    //    Thread.sleep(5000)
+    //    println(run_cmd)
+    //    println(run_cmd.!!)
     //
     //    // 获取你的容器的ID
     val containerId = s"wsl.exe docker ps -q --filter ancestor=$imageID".!!
@@ -93,5 +105,4 @@ object WavToText extends App {
 
   }
 
-  override def help(): Unit = ???
 }

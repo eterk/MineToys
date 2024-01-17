@@ -38,11 +38,11 @@ object ImageToIco extends App {
       val outputFile = new File(output)
 
       // 调用ico转换函数，将输入图像转换为ico图像，并写入输出文件
-//      convertToIco(inputImage, outputFile)
-      pngToIco2(tempFile,output)
+      //      convertToIco(inputImage, outputFile)
+      pngToIco2(tempFile, output)
 
       // 删除临时的png文件
-//      new File(tempFile).delete()
+      //      new File(tempFile).delete()
 
       // 打印成功的信息
       println(s"Successfully converted $input to $output")
@@ -90,7 +90,8 @@ object ImageToIco extends App {
 
     // 循环读取输入流，直到结束
     while ( {
-      bytesRead = inputStream.read(buffer); bytesRead != -1
+      bytesRead = inputStream.read(buffer);
+      bytesRead != -1
     }) {
       // 将缓冲区的内容写入输出流
       outputStream.write(buffer, 0, bytesRead)
@@ -130,6 +131,7 @@ object ImageToIco extends App {
   }
 
   // 引入java.awt.image包，用于处理图像
+
   import java.awt.image.BufferedImage
   // 引入javax.imageio包，用于读写图像文件
   import javax.imageio.ImageIO
@@ -171,6 +173,7 @@ object ImageToIco extends App {
 
 
   // 引入java.io包，用于操作文件
+
   import java.io.File
   // 引入net.coobird.thumbnailator包，用于处理图像
   import net.coobird.thumbnailator.Thumbnails
@@ -192,9 +195,6 @@ object ImageToIco extends App {
   }
 
 
-
-
-
   override def appName: String = "image to icon"
 
   override def paramSeq: Seq[String] = Seq("input", "output")
@@ -205,5 +205,4 @@ object ImageToIco extends App {
 
   override def execute(params: String*): Unit = localFileToIco(params.head, params(1))
 
-  override def help(): Unit = ???
 }

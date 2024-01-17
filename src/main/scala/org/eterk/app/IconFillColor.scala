@@ -7,15 +7,36 @@ import java.awt.image.BufferedImage
 import java.awt.{AlphaComposite, Color, GradientPaint}
 import java.io.File
 
-object IconFillColor {
+object IconFillColor extends App {
+
+
+  object ICON {
+    def create(path: String, postfix: String): ICON = {
+      val outputPath: String = path.substring(0, path.lastIndexOf(".")) + "_" + postfix + ".ico"
+      new ICON(path, outputPath)
+    }
+  }
+
+  case class ICON(path: String, outputPath: String) {
+    // 读取图标文件，得到一个缓冲图像对象
+    val iconImage: BufferedImage = Imaging.getBufferedImage(new File(path))
+    // 获取图像的宽度和高度
+    val width: Int = iconImage.getWidth
+    val height: Int = iconImage.getHeight
+
+    def newImage() = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+
+  }
+
+
   // 定义一个函数，用于给图标文件上色
   def fillSingle(icon: String, color: String): String = {
-    val i1 =  ICON.create(icon,"single")
+    val i1 = ICON.create(icon, "single")
     import i1._
     // 将颜色字符串转换为整数值，表示ARGB格式的颜色
     val colorValue = Integer.parseInt(color, 16)
 
-    val img=newImage()
+    val img = newImage()
     // 创建一个新的缓冲图像对象，用于存储修改后的图像
 
     // 遍历图标的每个像素
@@ -35,17 +56,18 @@ object IconFillColor {
     write(img, outputPath)
     outputPath
   }
+
   // 定义一个函数，创建一个新的图标，使用指定的颜色和渐变角度
-  def fillGradient(icon: String, colorsSrc: Seq[Color], degree: Int,postFix:String): String = {
-    val i1=ICON.create(icon,postFix)
-    val colors=colorsSrc match {
-      case single::Nil=>Seq(single)
-      case other=>other
+  def fillGradient(icon: String, colorsSrc: Seq[Color], degree: Int, postFix: String): String = {
+    val i1 = ICON.create(icon, postFix)
+    val colors = colorsSrc match {
+      case single :: Nil => Seq(single)
+      case other => other
     }
     import i1._
 
     // 获取新图像的绘图对象
-    val square=newImage()
+    val square = newImage()
     val g = square.createGraphics()
 
     val (x1, y1, x2, y2) = getCoordinate(degree, width, height)
@@ -76,7 +98,7 @@ object IconFillColor {
 
 
     // 绘制图标图像，覆盖在渐变的矩形上
-//    g.drawImage(iconImage, 0, 0, null)
+    //    g.drawImage(iconImage, 0, 0, null)
 
 
     // 假设你有两个BufferedImage对象，分别命名为A和B，它们的长宽一样
@@ -100,43 +122,33 @@ object IconFillColor {
 
     // 释放绘图对象的资源
     // 创建一个新的文件对象，用于存储修改后的图像
-    write(img,outputPath)
+    write(img, outputPath)
     // 返回文件的路径
     outputPath
   }
 
 
-  def main(args: Array[String]): Unit = {
 
-    val picDir="S:\\util\\pic\\ao"
-    val iconDir= "S://util/icon"
-    val colNums=Seq(2)
-    val degrees=Seq(45)
 
-    createManay(picDir,iconDir,colNums,degrees)
-  }
-
-  def createManay(picDir:String,iconDir:String,colNums:Seq[Int],degrees: Seq[Int])={
-    listFiles(iconDir,"ico",recursive = false)
-      .foreach{
-        icon=>
-          listFiles(picDir,"jpg",recursive = false)
+  def createMany(picDir: String, iconDir: String, colNums: Seq[Int], degrees: Seq[Int]) = {
+    listFiles(iconDir, "ico", recursive = false)
+      .foreach {
+        icon =>
+          listFiles(picDir, "jpg", recursive = false)
             .zipWithIndex
-            .foreach{
-              case (jpg,index)=>
-                val colors= getDominantColor(jpg)
-                val jpgName=getFileName(jpg)
+            .foreach {
+              case (jpg, index) =>
+                val colors = getDominantColor(jpg)
+                val jpgName = getFileName(jpg)
                 colNums
-                  .foreach{
-                    num=>
+                  .foreach {
+                    num =>
                       degrees
-                        .foreach{
-                          degree=>
-                            fillGradient(icon,colors.take(num),degree ,Seq(jpgName,num,degree).mkString("_"))
+                        .foreach {
+                          degree =>
+                            fillGradient(icon, colors.take(num), degree, Seq(jpgName, num, degree).mkString("_"))
                         }
                   }
-
-
 
 
             }
@@ -145,25 +157,14 @@ object IconFillColor {
   }
 
 
+  override def appName: String = "fill_icon"
+
+  override def paramSeq: Seq[String] = Seq("icon_path", "color_path", "color_num", "degree")
+
+  override def paramDescription: Seq[String] = Seq("图标路径", "颜色图标路径", "渐变数量", "渐变角度")
+
+  override def appDescription: String = "给图标非透明部分填色"
+
+  override def execute(params: String*): Unit = createMany(params(0), params(1), params(2).split(",").map(_.toInt), params(3).split(",").map(_.toInt))
 }
 
-object ICON{
-  def create(path:String,postfix:String):ICON={
-    val outputPath:String= path.substring(0, path.lastIndexOf(".")) + "_"+postfix+".ico"
-    new ICON(path,outputPath)
-  }
-}
-
-case class ICON(path:String,outputPath:String){
-  // 读取图标文件，得到一个缓冲图像对象
-  val iconImage: BufferedImage = Imaging.getBufferedImage(new File(path))
-  // 获取图像的宽度和高度
-  val width: Int = iconImage.getWidth
-  val height: Int = iconImage.getHeight
-
-  def newImage() = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-
-}
-
-// 定义一个HSL类，包含色相、饱和度、亮度三个分量
-case class HSL(h: Double, s: Double, l: Double)

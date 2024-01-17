@@ -1,7 +1,6 @@
 package org.eterk.util
 
 import org.apache.commons.imaging.{ImageFormats, Imaging}
-import org.eterk.app.HSL
 import org.soualid.colorthief.MMCQ
 
 import java.awt.Color
@@ -207,6 +206,22 @@ object Util{
     path.substring(0, path.lastIndexOf(".")) + "."+suffix
   }
 
+  // 定义一个函数，接受一个文件名的序列，返回一个字符串
+  def concatFiles(fileNames: Seq[String]): String = {
+    // 创建一个空的字符串构建器
+    val sb = new StringBuilder()
+    // 遍历每个文件名
+    for (fileName <- fileNames) {
+      // 使用scala.io.Source从文件中读取内容，指定编码为utf-8
+      val source = scala.io.Source.fromFile(fileName, "utf-8")
+      // 将文件内容追加到字符串构建器中
+      sb.append(source.mkString)
+      // 关闭文件
+      source.close()
+    }
+    // 返回字符串构建器的结果
+    sb.toString()
+  }
   // 定义一个函数，接受三个参数，一个是文件地址，一个是文件结尾符合的一个条件，一个是是否递归
   def filterFiles(path: String, condition: String => Boolean, recursive: Boolean): Seq[String] = {
     // 创建一个文件对象，用来表示输入的文件地址
@@ -219,9 +234,10 @@ object Util{
     if (file.exists) {
       if (file.isFile) {
         // 如果是一个文件，判断文件名是否符合条件
-        if (condition(file.getName)) {
+        val abPath= file.getAbsolutePath
+        if (condition(abPath)) {
           // 如果符合条件，将文件地址添加到结果序列中
-          result = result :+ file.getAbsolutePath
+          result = result :+ abPath
         }
       } else if (file.isDirectory) {
         // 如果是一个文件夹，获取文件夹中的所有文件和子文件夹
