@@ -9,8 +9,10 @@ object AppFactory {
     Seq(ExportWav,
       FactorialApp,
       HelloApp,
-      IconFillColor,
-      ImageToIco,
+      GradientIcon,
+      SingleColorIcon,
+      ImageConvert,
+      DesktopInI,
       WavToText)
 
 

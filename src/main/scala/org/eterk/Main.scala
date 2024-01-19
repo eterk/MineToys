@@ -24,6 +24,8 @@ object Main {
       .foreach {
         case (app, index) =>
           println(s"$index . ${app.appName} : ${app.appDescription}")
+          println(app.help())
+          println()
       }
   }
 
