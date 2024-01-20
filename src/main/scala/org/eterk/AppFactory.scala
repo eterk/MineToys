@@ -7,7 +7,7 @@ object AppFactory {
 
   def availableApp: Seq[App] =
     Seq(ExportWav,
-      FactorialApp,
+      DominantColor,
       HelloApp,
       GradientIcon,
       SingleColorIcon,

@@ -47,30 +47,23 @@ object ImageConvert extends App {
 
   }
 
+  override def appKey: String = "ic"
 
-  // 定义一个函数，判断一个文件是否是一个图像文件，根据文件的扩展名
-  def isImageFile(file: File): Boolean = {
-    // 获取文件的扩展名
-    val extension = file.getName.split("\\.").last.toLowerCase
+  override def appName: String = "image-convert"
 
-    // 判断扩展名是否是常见的图像格式
-    extension match {
-      case "jpg" | "jpeg" | "png" | "gif" | "bmp" | "svg" => true
-      case _ => false
-    }
-  }
+  override def paramSeq: Seq[String] = Seq("target-type", "input", "output")
 
-
-  override def appName: String = "image to icon"
-
-  override def paramSeq: Seq[String] = Seq("input", "output")
-
-  override def paramDescription: Seq[String] = Seq("输入文件地址", "输出文件地址")
-
-  override def appDescription: String = ""
+  override def appDescription: String = "svg to bmp or svg to png"
 
   override def execute(params: String*): Unit = {
-    svgToPNG(params.head, params(1))
+    val func =
+      params.head match {
+        case isBMP if isBMP.toLowerCase == "bmp" => svgToBmp _
+        case isPNG if isPNG.toLowerCase == "png" => svgToPNG _
+      }
+    func(params(1), params(2))
+
+
   }
 
 }

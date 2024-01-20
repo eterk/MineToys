@@ -47,6 +47,21 @@ object Util{
     // 返回色调的值，它是一个整数，范围是0到360，代表色彩环上的角度
     Math.round(hsl.h * 360).toInt
   }
+
+  def isImage(x:String): Boolean ={
+    x.toLowerCase().endsWith("png") || x.toLowerCase().endsWith("jpg")
+
+  }
+
+  def getDominantColorMap(dirOrImg:String): Map[String, Seq[Color]] ={
+    Util.filterFiles(dirOrImg, Util.isImage, recursive = false)
+      .map(p => {
+        val colors = getDominantColor(p)
+        val jpgName = getFileName(p)
+        (jpgName, colors)
+      }).toMap
+  }
+
   def getDominantColor(jpg: String): Seq[Color] ={
     // 读取jpg图片，将其转换为BufferedImage对象
     val image = Imaging.getBufferedImage(new File(jpg))

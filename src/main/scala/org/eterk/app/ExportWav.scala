@@ -80,18 +80,19 @@ object ExportWav extends App {
   }
 
 
-  override def appName: String = "EXPORT WAV"
+  override def appKey: String = "mew"
 
-  override def paramSeq: Seq[String] = Seq("input file")
+  override def appName: String = "mp4-export-wav"
 
-  override def paramDescription: Seq[String] = Seq("输入文件")
+  override def paramSeq: Seq[String] = Seq("input_file")
 
-  override def appDescription: String = "将mp4 导出wav 文件"
+  override def appDescription: String = "export audio file(.wav) from .mp4"
 
   override def execute(params: String*): Unit = {
 
-    Util.filterFiles(params.head, _.endsWith(".mp4"), recursive = false).foreach(mp4ToWav)
-
+    Util
+      .filterFiles(params.head, _.endsWith(".mp4"), recursive = false)
+      .foreach(mp4ToWav)
 
   }
 

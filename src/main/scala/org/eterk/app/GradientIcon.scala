@@ -1,13 +1,14 @@
 package org.eterk.app
 
 
-import org.eterk.util.ICON
-import org.eterk.util.Util.{getCoordinate, getDominantColor, getFileName, listFiles, write}
+import org.eterk.util.{ICON, Util}
+import org.eterk.util.Util.{getCoordinate, getDominantColor, getDominantColorMap, getFileName, listFiles, write}
 
 import java.awt.{AlphaComposite, Color, GradientPaint}
 import java.awt.image.BufferedImage
+import java.io.File
 
-object GradientIcon extends App{
+object GradientIcon extends App {
 
   // 定义一个函数，创建一个新的图标，使用指定的颜色和渐变角度
   def fillGradient(icon: String, colorsSrc: Seq[Color], degree: Int, postFix: String): String = {
@@ -80,31 +81,30 @@ object GradientIcon extends App{
   }
 
 
-
-  def createMany(picDir: String, iconDir: String, colorNums: Seq[Int], degrees: Seq[Int]): Unit = {
+  def createMany(nameColors: Map[String, Seq[Color]],
+                 iconDir: String,
+                 colorNums: Seq[Int],
+                 degrees: Seq[Int]): Unit = {
     listFiles(iconDir, "ico", recursive = false)
       .foreach {
         icon =>
           println(icon)
-          listFiles(picDir, "jpg", recursive = false)
-            .zipWithIndex
-            .foreach {
-              case (jpg, _) =>
-                val colors = getDominantColor(jpg)
-                val jpgName = getFileName(jpg)
-                colorNums
-                  .foreach {
-                    num =>
-                      degrees
-                        .foreach {
-                          degree =>
-                            val name= Seq(jpgName, num, degree).mkString("_")
-                            fillGradient(icon, colors.take(num), degree, name)
-                        }
-                  }
+          nameColors.foreach {
+            case (jpgName, colors) =>
+              colorNums
+                .filter(x => x <= colors.size)
+                .foreach {
+                  num =>
+                    degrees
+                      .foreach {
+                        degree =>
+                          val name = Seq(jpgName, num, degree).mkString("_")
+                          fillGradient(icon, colors.take(num), degree, name)
+                      }
+                }
 
+          }
 
-            }
 
       }
   }
@@ -112,11 +112,20 @@ object GradientIcon extends App{
 
   override def appName: String = "fill_icon"
 
-  override def paramSeq: Seq[String] = Seq("icon_path", "color_path", "color_num", "degree")
+  override def appKey: String = "fi"
 
-  override def paramDescription: Seq[String] = Seq("图标路径", "颜色图片路径", "渐变数量", "渐变角度")
+  override def paramSeq: Seq[String] = Seq("icon_path", "color_path", "color_num", "degree")
 
   override def appDescription: String = "给图标非透明部分填色"
 
-  override def execute(params: String*): Unit = createMany(params(1), params(0), params(2).split(",").map(_.toInt), params(3).split(",").map(_.toInt))
+  override def execute(params: String*): Unit = {
+
+    val nameColors: Map[String, Seq[Color]] = params(1) match {
+      case dirOrImg if new File(dirOrImg).isDirectory || Util.isImage(dirOrImg) => getDominantColorMap(dirOrImg)
+      case txt => DominantColor.jsonToMap(Util.concatFiles(txt :: Nil))
+    }
+
+
+    createMany(nameColors, params(0), params(2).split(",").map(_.toInt), params(3).split(",").map(_.toInt))
+  }
 }

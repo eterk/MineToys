@@ -10,13 +10,14 @@ object WavToText extends App {
   import sys.process._
 
 
-  override def appName: String = "wav  to text"
+  override def appKey: String = "wtt"
+
+  override def appName: String = "wav to text"
 
   override def paramSeq: Seq[String] = Seq("audio_in")
 
-  override def paramDescription: Seq[String] = "输入文件" :: Nil
 
-  override def appDescription: String = ""
+  override def appDescription: String = "use funasr to transfer wav to text(funasr server require)"
 
   override def execute(params: String*): Unit = {
     val audio_in = params.head
@@ -26,7 +27,6 @@ object WavToText extends App {
         .map(p => {
           val path = "/home/data/video/"
           val in = path + new File(p).getName
-          //          (in, Util.repalceFileFomat(in, "txt"))
           (in, path)
         })
 
