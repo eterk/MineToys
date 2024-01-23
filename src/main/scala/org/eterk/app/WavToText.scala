@@ -12,12 +12,6 @@ object WavToText extends App {
 
   override def appKey: String = "wtt"
 
-  override def appName: String = "wav to text"
-
-  override def paramSeq: Seq[String] = Seq("audio_in")
-
-
-  override def appDescription: String = "use funasr to transfer wav to text(funasr server require)"
 
   override def execute(params: String*): Unit = {
     val audio_in = params.head

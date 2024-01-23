@@ -39,11 +39,6 @@ object SingleColorIcon extends App {
 
   override def appKey: String = "sci"
 
-  override def appName: String = "single-color-icon"
-
-  override def paramSeq: Seq[String] = Seq("icon", "color", "postfix")
-
-  override def appDescription: String = "fill color to icon"
 
   override def execute(params: String*): Unit = {
 

@@ -110,10 +110,10 @@ object GradientIcon extends App {
   }
 
 
-  override def appName: String = "fill_icon"
+
 
   override def appKey: String = "fi"
-
+  override def appName: String = "fill_icon"
   override def paramSeq: Seq[String] = Seq("icon_path", "color_path", "color_num", "degree")
 
   override def appDescription: String = "给图标非透明部分填色"

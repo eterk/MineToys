@@ -9,12 +9,6 @@ object DominantColor extends App {
 
   override def appKey: String = "edc"
 
-  override def appName: String = "export dominant color use hex"
-
-  override def paramSeq: Seq[String] = Seq("input", "format", "output")
-
-
-  override def appDescription: String = "get dominant color from picture"
 
   override def execute(params: String*): Unit = {
 

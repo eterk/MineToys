@@ -1,17 +1,15 @@
 package org.eterk
 
-import app.{App, ExportWav, WavToText}
-
-import java.io.File
-
-// 定义一个 case class 来表示命令行配置
-case class Param(list: Option[Boolean],
-                 execute: Option[String] = None,
-                 help: Option[Boolean])
+import app.App
+import com.osinka.i18n.Lang
+import org.eterk.util.LanguageSetting
 
 
 // 定义一个 scopt 的 OParser，来解析命令行参数
 object Main {
+
+
+  //   在你的main方法或者其他地方，调用AnsiConsole.systemInstall方法
 
 
   // 定义一个方法，根据应用程序的名称，找到对应的应用程序实例
@@ -25,19 +23,37 @@ object Main {
       .zipWithIndex
       .foreach {
         case (app, index) =>
-          println(s"$index .[${app.appKey}] ${app.appName} : ${app.appDescription}")
-        //          println(app.help())
-        //          println()
+          import org.eterk.util.ColorString._
+
+          val i = index.toString
+          val key = app.appKey.padTo(10, ' ').cyan
+          val desc = app.appDescription
+          val param = app.paramSeq.magentaYellow(",")
+          //            mkString(",").yellow
+
+          println(s"$i.$key:" + param)
+          println("".padTo(12, ' ') + desc)
+
+        //          println(s"$index .[${app.appKey}] ${app.appName} : ${app.appDescription} =>  ${app.paramSeq.mkString(",")}")
+
       }
   }
 
-  def help(name: String) = {
+  def help(name: String): Unit = {
     findApp(name) match {
       case Some(app) =>
         println()
-        println(app.appName)
-        println(app.paramSeq.mkString("param:",",",""))
-        println(app.appDescription)
+        val head = s"【${app.appKey}】.${app.appName}"
+        val param = app.paramSeq.zipWithIndex.map {
+          case (k, i) => (i + 1) + "." + k
+        }.mkString("param:", ",", "")
+        val info =
+          s"""
+             |${head}
+             |${param}
+             |${app.appDescription}
+             |""".stripMargin
+        println(info)
       case None =>
         println(s"No such app: $name,available name ${AppFactory.availableApp}")
     }
@@ -59,6 +75,7 @@ object Main {
 
   // 定义一个case class来存储命令行参数
   case class Config(help: Option[String] = None, // 显示指定App帮助信息
+                    language: String = "zh",
                     list: Boolean = false, // 是否执行list()方法
                     exe: Option[Array[String]] = None // 是否执行executeApp(arg:Array[String])方法
                    )
@@ -66,12 +83,17 @@ object Main {
   implicit val arrayRead: Read[Array[String]] = Read.reads(_.split(","))
 
   // 创建一个OptionParser实例
-  val parser: OptionParser[Config] = new OptionParser[Config]("") {
+  private val parser: OptionParser[Config] = new OptionParser[Config]("") {
     // 定义--help或-h选项
     opt[String]("help")
       .abbr("h")
       .action((x, c) => c.copy(help = Some(x)))
       .text("show help message")
+
+    opt[String]("language")
+      .abbr("lang")
+      .action((x, c) => c.copy(language = x))
+      .text("select language show")
     // 定义--list或-l选项
     opt[Unit]("list").abbr("l").action((_, c) => c.copy(list = true)).text("执行list()方法")
     // 定义--exe或-e选项
@@ -84,15 +106,16 @@ object Main {
   // 在 main 方法中，解析命令行参数，并根据解析结果执行相应的逻辑
   def main(args: Array[String]): Unit = {
 
-
     // 解析命令行参数
     parser.parse(args, Config()) match {
       case Some(config) =>
+        LanguageSetting.setLang(Lang(config.language))
 
         config.help.foreach(appName => help(appName))
         if (config.list) {
           listApps()
         }
+
         config.exe.foreach(args => {
           val args = config.exe.get
           println(args.length)

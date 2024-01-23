@@ -145,14 +145,7 @@ object DesktopInI extends App {
     }
   }
 
-
-  override def appName: String = "set-icon-to-folder"
-
   override def appKey: String = "sito"
-
-  override def paramSeq: Seq[String] = Seq("icon_folder", "target_folder")
-
-  override def appDescription: String = "set specify folder icon use icon folder"
 
   override def execute(params: String*): Unit = setDesktopIni(params(0), params(1))
 }

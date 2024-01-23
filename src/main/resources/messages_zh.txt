@@ -1,0 +1,24 @@
+mew.name=从mp4文件中导出wav音频
+mew.params=需要导出的mp4文件或文件夹,导出单个音频最大时长（分钟）
+mew.desc=输入文件夹的话，会把该文件夹内所有mp4文件导出同名音频格式，如果mp4文件长于设置的最大时长，则会进行分片导出
+sito.name=给windows系统的文件夹设置图标
+sito.params=图标所在的文件夹,需要设置文件夹的图标的文件夹
+sito.desc=用指定文件夹内的图标，设置给定文件夹的下属的同名文件夹，要求必须是文件夹且和图标名称相同
+edc.name=导出图片主色调的16进制代码
+edc.params=输入图片文件（文件夹）,输出格式,输出类型
+edc.desc=输出格式可选（json,scala）,输出类型可选（$文本文件指定路径,print）
+fi.name=给图标（ico）填充渐变色
+fi.params=图标所在路径,颜色路径，填充颜色数量，渐变角度
+fi.desc=给图标的非透明部分填充渐变色 \
+color_path 可以指定edc 程序输出的json 格式文件或者目标图片路径 \
+color_num 是渐变颜色的数量，小于输入的解析颜色数量 \
+degree 0,45,90,135,180, 必须是45的倍数
+ic.name=图片格式转换
+ic.params=目标格式,输入,输出
+ic.desc=svg 图片 转换为 png 或者png 格式
+sci.name=图标纯色填充
+sci.params=图标文件,填充颜色的16进制值,输出文件后缀
+sci.desc=填充纯色到图标的不透明部分
+wtt.name=声音转文字
+wtt.params=声音的文件夹
+wtt.desc=使用funasr 来转换 wav 到 文本文件（需要开启本地funasr 服务）

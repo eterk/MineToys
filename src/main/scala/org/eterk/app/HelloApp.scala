@@ -6,15 +6,15 @@ object HelloApp extends App {
 
   override def appKey: String = "test"
 
-  def appName: String = "Hello"
+  override def appName: String = "Hello"
 
-  def paramSeq: Seq[String] = Seq("name")
-
-
-  def appDescription: String = "A simple app that prints hello to the given name"
+  override def paramSeq: Seq[String] = Seq("name")
 
 
-  def execute(params: String*): Unit = {
+  override def appDescription: String = "A simple app that prints hello to the given name"
+
+
+  override def execute(params: String*): Unit = {
     val context =
       params match {
         case Nil => "World"

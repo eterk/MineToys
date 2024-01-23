@@ -8,15 +8,16 @@ import java.awt.image.BufferedImage
 import java.io.{File, FileOutputStream}
 import java.util
 
-object Util{
+object Util {
 
-  def write(img: BufferedImage,outputPath:String): Unit ={
+  def write(img: BufferedImage, outputPath: String): Unit = {
     val out = new FileOutputStream(outputPath)
     // 将新图像写入文件，使用PNG格式
     Imaging.writeImage(img, out, ImageFormats.ICO, null)
     out.close()
   }
-  def getCoordinate(degree:Int,width:Int,height:Int): (Int, Int, Int, Int) ={
+
+  def getCoordinate(degree: Int, width: Int, height: Int): (Int, Int, Int, Int) = {
     // 计算渐变的起点和终点的坐标，根据渐变角度的不同，有不同的计算方式
     degree match {
       case 0 => // 如果渐变角度为0，表示从左到右渐变，起点在左上角，终点在右上角
@@ -39,6 +40,7 @@ object Util{
         throw new IllegalArgumentException("Invalid degree: " + degree)
     }
   }
+
   // 定义一个函数，接受一个jpg图片的路径，返回一个整数，表示图片的色调
   def extractHue(jpg: String): Int = {
 
@@ -48,12 +50,12 @@ object Util{
     Math.round(hsl.h * 360).toInt
   }
 
-  def isImage(x:String): Boolean ={
+  def isImage(x: String): Boolean = {
     x.toLowerCase().endsWith("png") || x.toLowerCase().endsWith("jpg")
 
   }
 
-  def getDominantColorMap(dirOrImg:String): Map[String, Seq[Color]] ={
+  def getDominantColorMap(dirOrImg: String): Map[String, Seq[Color]] = {
     Util.filterFiles(dirOrImg, Util.isImage, recursive = false)
       .map(p => {
         val colors = getDominantColor(p)
@@ -62,7 +64,7 @@ object Util{
       }).toMap
   }
 
-  def getDominantColor(jpg: String): Seq[Color] ={
+  def getDominantColor(jpg: String): Seq[Color] = {
     // 读取jpg图片，将其转换为BufferedImage对象
     val image = Imaging.getBufferedImage(new File(jpg))
     // 使用Color Thief的getDominantColor方法，从图像中提取主要的颜色，得到一个颜色数组
@@ -70,8 +72,8 @@ object Util{
     val dominantColor: util.List[Array[Int]] = MMCQ.compute(image, 10) // 10 is the number of dominant colors to find
     // 将颜色列表转换为Scala的数组
     dominantColor.toArray(new Array[Array[Int]](0))
-      .map{
-        case Array(r,g,b)=>new Color(r, g, b)
+      .map {
+        case Array(r, g, b) => new Color(r, g, b)
       }.toSeq
 
   }
@@ -186,10 +188,11 @@ object Util{
     }
   }
   // 导入java.io.File类，用于操作文件和文件夹
+
   import java.io.File
 
   // 定义一个函数，接受一个文件夹路径和一个文件后缀作为参数，返回一个字符串列表，表示所有符合条件的文件的完全路径
-  def listFiles(folder: String, suffix: String, recursive:Boolean): Seq[String] = {
+  def listFiles(folder: String, suffix: String, recursive: Boolean): Seq[String] = {
     // 创建一个File对象，表示给定的文件夹路径
     val dir = new File(folder)
     // 判断文件夹是否存在，如果不存在，返回一个空列表
@@ -208,8 +211,8 @@ object Util{
             List()
           }
         // 如果是文件夹，递归调用函数，返回子文件夹下的所有符合条件的文件的完全路径
-        case folder if folder.isDirectory && recursive=>
-          listFiles(folder.getAbsolutePath, suffix,recursive)
+        case folder if folder.isDirectory && recursive =>
+          listFiles(folder.getAbsolutePath, suffix, recursive)
         // 其他情况，返回空列表
         case _ =>
           List()
@@ -217,8 +220,8 @@ object Util{
     }
   }
 
-  def repalceFileFomat(path:String,suffix:String): String ={
-    path.substring(0, path.lastIndexOf(".")) + "."+suffix
+  def repalceFileFomat(path: String, suffix: String): String = {
+    path.substring(0, path.lastIndexOf(".")) + "." + suffix
   }
 
   // 定义一个函数，接受一个文件名的序列，返回一个字符串
@@ -237,6 +240,18 @@ object Util{
     // 返回字符串构建器的结果
     sb.toString()
   }
+
+
+  def appendSuffix(file: File, suffix: String): String = {
+    val abPath = file.getAbsolutePath
+    val index = abPath.lastIndexOf(".")
+
+    val (start, format) = {
+      abPath.splitAt(index)
+    }
+    s"${start}_${suffix}$format"
+  }
+
   // 定义一个函数，接受三个参数，一个是文件地址，一个是文件结尾符合的一个条件，一个是是否递归
   def filterFiles(path: String, condition: String => Boolean, recursive: Boolean): Seq[String] = {
     // 创建一个文件对象，用来表示输入的文件地址
@@ -249,7 +264,7 @@ object Util{
     if (file.exists) {
       if (file.isFile) {
         // 如果是一个文件，判断文件名是否符合条件
-        val abPath= file.getAbsolutePath
+        val abPath = file.getAbsolutePath
         if (condition(abPath)) {
           // 如果符合条件，将文件地址添加到结果序列中
           result = result :+ abPath

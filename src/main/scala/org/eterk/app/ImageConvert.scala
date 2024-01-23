@@ -49,11 +49,6 @@ object ImageConvert extends App {
 
   override def appKey: String = "ic"
 
-  override def appName: String = "image-convert"
-
-  override def paramSeq: Seq[String] = Seq("target-type", "input", "output")
-
-  override def appDescription: String = "svg to bmp or svg to png"
 
   override def execute(params: String*): Unit = {
     val func =
