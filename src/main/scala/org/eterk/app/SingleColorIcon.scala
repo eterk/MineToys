@@ -44,14 +44,24 @@ object SingleColorIcon extends App {
 
     val path = params(0)
 
-    val color = params(1)
+    val color = params(1).split(",")
 
-    val name = params(2)
+    val name = params(2).split(",")
 
-    val seq = Util.filterFiles(path, x => Util.isIconFile(new File(x)), recursive = false)
+    val seq: Seq[String] = Util.filterFiles(path, x => Util.isIconFile(new File(x)), recursive = false)
 
 
-    seq.foreach(fillSingle(_, color, name))
+    if (color.length != name.length) {
+      println(s"color.size!=name.size ${color.mkString(",")} get ${color.size}, but ${name.mkString(",")} get ${name.size}")
+    }
+
+    val colorName = color.zip(name)
+
+    seq.foreach(f => {
+      colorName.foreach {
+        case (c, n) => fillSingle(f, c, n)
+      }
+    })
 
   }
 }

@@ -1,3 +1,35 @@
+client.welcome:欢迎使用我的程序！
+client.input:请输入命令:
+client.quit.confirm:按回车确认！
+client.bye:再见！
+client.bye.tips:输入`Q`或者`exit`退出！
+
+config.wrong.input:无效的参数，请使用--help或-h选项查看帮助信息,或者-l:all 查看所有可以输入的功能
+config.debug.info:开启debug 模式！
+
+config.parser.start:当前用户组
+config.parser.help:打开指定应用的帮助信息
+config.parser.group:设置应用组
+config.parser.list:展示应用列表
+config.parser.exe:执行应用程序
+config.parser.debug:设置调试模式
+config.parser.lang:设置显示语言
+config.env.debug:调试模式
+config.env.lang:显示语言
+config.env.group:应用组
+
+exe.param.app=正在执行
+exe.param.param=参数为
+exe.params.length.error=参数长度不一致
+exe.success=执行成功
+
+group.active.config=设置当前活动的组
+
+hello.name=你好
+hello.hello=您好
+hello.desc=测试程序，用于示例程序的使用
+hello.default=您吃了吗
+hello.params=名字
 mew.name=从mp4文件中导出wav音频
 mew.params=需要导出的mp4文件或文件夹,导出单个音频最大时长（分钟）
 mew.desc=输入文件夹的话，会把该文件夹内所有mp4文件导出同名音频格式，如果mp4文件长于设置的最大时长，则会进行分片导出

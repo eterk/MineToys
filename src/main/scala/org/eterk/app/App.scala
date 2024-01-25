@@ -1,15 +1,14 @@
 package org.eterk.app
 
 
-import com.osinka.i18n.{Lang, Messages}
+import com.osinka.i18n.Messages
 
 import scala.annotation.varargs
 
 trait App {
 
-  import org.eterk.util.LanguageSetting.lang
+  import org.eterk.util.LanguageSetting._
 
-  implicit val langeImp: Lang = lang
 
   /**
    * a unique key to start up App,as simple,short as possible;

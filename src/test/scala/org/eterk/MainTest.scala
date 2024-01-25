@@ -4,7 +4,6 @@ import org.eterk.util.LanguageSetting
 import org.scalatest.funsuite.AnyFunSuiteLike
 
 import java.io.File
-import java.util.Locale
 
 class MainTest extends AnyFunSuiteLike {
 
@@ -18,37 +17,42 @@ class MainTest extends AnyFunSuiteLike {
     //    Main.main(Array("--help:Factorial"))
     //
     //    Main.main(Array("--help:Factorial -e:Factorial"))
-    Main.main(Array("--list"))
-    Main.main(Array("--help:fi"))
+
+    Main.main(Array("--debug:0"))
+
+    //    Main.main(Array("--help:fi"))
     //    Main.main(Array("-e:wtt,S:\\lib\\video"))
     //    Main.main(Array("-e:mew,S:\\lib\\video,16"))
   }
-  test("i118n"){
-//    println(getClass.getResource("/messages.zh"))
-    Main.main(Array("--help:mew"))
-
-//    print("en")
-//    Main.main(Array("-lang:en --help:mew"))
+  test("list"){
+    Main.main(Array("--list:all"))
+    Main.main(Array("--list:active"))
+    Main.main(Array("--list:test"))
+    Main.main(Array("-l:active"))
+    Main.main(Array("-l:as"))
   }
+  test("i118n") {
+    //    println(getClass.getResource("/messages.zh"))
+    //    Main.main(Array("--help:mew"))
+    Main.main(Array("-e:sci;S:\\util\\icon\\origin;FF00FF,800080;p1,p2", "-g:icon"))
 
-  test("color"){
-
+    //    print("en")
+    //    Main.main(Array("-lang:en --help:mew"))
   }
-
 
   test("requie appk unique") {
 
     AppFactory.availableApp.map(_.appKey).distinct.size == AppFactory.availableApp.size
   }
-  test("lang"){
+  test("lang") {
     LanguageSetting.lang
   }
 
-test("dasdas"){
+  test("dasdas") {
 
-  println(getClass.getResource("/messages.zh"))
-  println(new File(getClass.getResource("/").getPath).list().mkString(","))
+    println(getClass.getResource("/messages.zh"))
+    println(new File(getClass.getResource("/").getPath).list().mkString(","))
 
-}
+  }
 
 }

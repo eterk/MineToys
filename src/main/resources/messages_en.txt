@@ -1,0 +1,56 @@
+client.welcome=Welcome to use my program!
+client.input=Please enter a command:
+client.quit.confirm=Press enter to confirm!
+client.bye=Goodbye!
+client.bye.tips=Enter `Q` or `exit` to quit!
+
+config.wrong.input=Invalid argument, please use --help or -h option to view help information or -l:all show all usage app
+config.debug.info=Enable debug mode!
+
+config.parser.start=Current user group
+config.parser.help=Open the help information of the specified application
+config.parser.group=Set application group
+config.parser.list=Show application list
+config.parser.exe=Execute application program
+config.parser.debug=Set debug mode
+config.parser.lang=Set display language
+config.env.debug=Debug mode
+config.env.lang=Display language
+config.env.group=Application group
+
+exe.param.app=Executing
+exe.param.param=Parameter is
+exe.params.length.error=Parameter length mismatch
+exe.success=Execution successful
+
+group.active.config=Set the current active group
+
+hello.name=Hello
+hello.hello=Hello
+hello.desc=Test program, used for the use of example programs
+hello.default=Have you eaten yet
+hello.params=Name
+mew.name=Export wav audio from mp4 files
+mew.params=mp4 file or folder to export, maximum length of single audio (minutes)
+mew.desc=If input is a folder, it will export all mp4 files in the folder to audio files with the same name, if mp4 file is longer than the set maximum length, it will split and export
+sito.name=Set icons for windows folders
+sito.params=Folder with icons, folder to set icons for
+sito.desc=Use the icons in the specified folder to set the icons for the subfolders of the given folder, requires that they are folders and have the same name as the icons
+edc.name=Export the hexadecimal code of the main color of the image
+edc.params=Input image file (folder), output format, output type
+edc.desc=Output format can be (json, scala), output type can be ($text file specified path, print)
+fi.name=Fill gradient color to icons (ico)
+fi.params=Icon path, color path, fill color number, gradient angle
+fi.desc=Fill gradient color to the non-transparent part of the icon \
+color_path can specify the json format file output by edc program or the target image path \
+color_num is the number of gradient colors, less than the input parsed color number \
+degree 0,45,90,135,180, must be a multiple of 45
+ic.name=Image format conversion
+ic.params=Target format, input, output
+ic.desc=Convert svg image to png or png format
+sci.name=Icon solid color fill
+sci.params=Icon file, fill color hexadecimal value, output file suffix
+sci.desc=Fill solid color to the non-transparent part of the icon
+wtt.name=Sound to text
+wtt.params=Sound folder
+wtt.desc=Use funasr to convert wav to text file (need to start local funasr service)

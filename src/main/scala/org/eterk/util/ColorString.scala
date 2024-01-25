@@ -2,6 +2,7 @@ package org.eterk.util
 
 
 import scala.collection.mutable
+import scala.language.implicitConversions
 
 
 object ColorString {
@@ -14,7 +15,7 @@ object ColorString {
 
 
   // 定义一个函数，接受一个序列，一个颜色序列，和一个分隔符作为参数，返回一个带有颜色的字符串
-  def colorString(seq: Seq[String], colors: Seq[String => String], sep: String): String = {
+  private def colorString(seq: Seq[String], colors: Seq[String => String], sep: String): String = {
     // 使用zipWithIndex方法，将序列的元素和它们的索引组合起来，得到一个新的序列
     val indexedSeq = seq.zipWithIndex
 
@@ -29,14 +30,23 @@ object ColorString {
   }
 
 
-  implicit class SeqStringImp(seq: Seq[String]) {
+  implicit class SeqStringImp(seq: IterableOnce[String]) {
+    implicit def onceToSeq(seq: IterableOnce[String]): Seq[String] = seq.iterator.toSeq
+
     def magentaYellow(sep: String): String = {
 
-      val colFunc = Seq((str: String) => str.red, (str: String) => str.green)
+      val colFunc = Seq((str: String) => str.magenta, (str: String) => str.yellow)
 
 
       colorString(seq, colFunc, sep)
 
+    }
+
+    def rainbow(sep: String): String = {
+
+      val colFunc: Seq[String => String] = Seq(_.red, _.yellow, _.green, _.cyan, _.blue, _.magenta)
+
+      colorString(seq, colFunc, sep)
     }
 
   }

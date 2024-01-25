@@ -293,7 +293,7 @@ object Util {
 
   // 定义一个函数，判断一个文件是否是icon文件，即扩展名为.ico
   def isIconFile(file: File): Boolean = {
-    file.isFile && file.getName.endsWith(".ico")
+    (!file.isDirectory) && file.getName.endsWith(".ico")
   }
 
   def getFileName(filePath: String): String = {

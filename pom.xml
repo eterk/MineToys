@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.eterk</groupId>
-    <artifactId>mineCode</artifactId>
+    <artifactId>mineToys</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -15,6 +15,8 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.eterk.Main</main.class>
+        <client.class>org.eterk.Client</client.class>
+        <app.name>mineToys</app.name>
     </properties>
 
 
@@ -151,6 +153,11 @@
             <artifactId>jansi</artifactId>
             <version>2.4.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>3.25.0</version>
+        </dependency>
 
 
     </dependencies>
@@ -217,6 +224,54 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <!-- https://mvnrepository.com/artifact/com.akathist.maven.plugins.launch4j/launch4j-maven-plugin -->
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>l4j-gui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <!-- The name of the exe file to create -->
+                            <outfile>target/${artifactId}.exe</outfile>
+                            <!-- The name of the jar file to wrap -->
+                            <jar>target/${artifactId}-${version}.jar</jar>
+
+
+                            <classPath>
+                                <mainClass>${client.class}</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <!-- The minimum JRE version required -->
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                            </jre>
+                            <!-- The icon file to use for the exe file -->
+                            <icon>src/main/resources/${app.name}.ico</icon>
+                            <!-- The version information to display for the exe file -->
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>1.0.0.0</txtFileVersion>
+                                <fileDescription>${app.name}</fileDescription>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>1.0.0.0</txtProductVersion>
+                                <productName>${app.name}</productName>
+                                <internalName>${app.name}</internalName>
+                                <originalFilename>${app.name}.exe</originalFilename>
+                                <companyName>${groupId}</companyName>
+                            </versionInfo>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
 
             <!--            <plugin>-->
             <!--                <groupId>org.apache.maven.plugins</groupId>-->

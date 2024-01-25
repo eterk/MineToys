@@ -1,26 +1,22 @@
 package org.eterk.app
 
+import com.osinka.i18n.Messages
 import org.eterk.AppFactory
 
 object HelloApp extends App {
 
-  override def appKey: String = "test"
+  import org.eterk.util.LanguageSetting._
 
-  override def appName: String = "Hello"
-
-  override def paramSeq: Seq[String] = Seq("name")
-
-
-  override def appDescription: String = "A simple app that prints hello to the given name"
+  override def appKey: String = "hello"
 
 
   override def execute(params: String*): Unit = {
     val context =
       params match {
-        case Nil => "World"
+        case Nil => Messages("hello.default")
         case seq => seq.mkString(" ")
       }
-    println(s"Hello, $context!")
+    println(s"${Messages("hello.hello")} $context!")
   }
 
 
