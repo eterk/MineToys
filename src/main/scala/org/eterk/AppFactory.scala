@@ -27,7 +27,7 @@ object AppFactory {
 
   def activeGroup: String = activeGroup_
 
-  private def audioGroup: Seq[App] = Seq(ExportWav, WavToText)
+  private def audioGroup: Seq[App] = Seq(ExportWav, SplitWav, WavToText)
 
   private def iconGroup: Seq[App] = Seq(DominantColor, GradientIcon, SingleColorIcon, ImageConvert, DesktopInI)
 

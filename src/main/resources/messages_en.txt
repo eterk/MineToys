@@ -24,7 +24,9 @@ exe.params.length.error=Parameter length mismatch
 exe.success=Execution successful
 
 group.active.config=Set the current active group
-
+sw.name=wav audio splitting
+sw.params=specified audio file address, duration (minutes)
+sw.desc=split the specified audio into fixed length segments
 hello.name=Hello
 hello.hello=Hello
 hello.desc=Test program, used for the use of example programs

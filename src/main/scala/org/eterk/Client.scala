@@ -1,31 +1,54 @@
 package org.eterk
 
-import scala.io.StdIn.readLine
 import com.osinka.i18n.Messages
 import org.eterk.util.{Config, Theme}
+
+import scala.io.StdIn.readLine
 
 object Client {
 
   import org.eterk.util.LanguageSetting._
 
+  // 定义一个函数，将一个字节数组转换为十六进制的字符串
+  def bytesToHex(bytes: Array[Byte]): String = {
+    // 使用StringBuilder来拼接字符串
+    val sb = new StringBuilder
+    // 遍历每个字节
+    for (b <- bytes) {
+      // 将字节转换为无符号的整数，然后转换为十六进制的字符串，如果长度不足两位，前面补零
+      val hex = f"${b & 0xff}%02x"
+      // 将十六进制的字符串追加到StringBuilder中
+      sb.append(hex)
+    }
+    // 返回StringBuilder的内容
+    sb.toString
+  }
+
+  def jlineTeminal() {
+    import org.jline.reader._
+    import org.jline.terminal._
+    val terminal: Terminal = TerminalBuilder.terminal()
+    //      .builder().encoding(Charset.forName("UTF-8")).build()
+
+    val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
+
+  }
+
+
   def main(args: Array[String]): Unit = {
     println(Messages("client.welcome"))
     Theme.printBanner()
     println(Config.parser.usage)
-    import org.jline.reader._
-    import org.jline.terminal._
+
     // 创建一个终端对象
-    val terminal: Terminal = TerminalBuilder.terminal()
-    // 创建一个读取器对象
-    val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
-
-
     var running = true
     while (running) {
       Config.msg(Config.showInfo() + " " + Messages("client.bye.tips"))
       // 读取用户的输入
-      val input = reader.readLine(Messages("client.input"))
+
+      val input = readLine(Messages("client.input"))
       // 根据用户的输入执行相应的操作
+
       input match {
         case c if "exit" == c || c == "q" =>
           // 在这里添加一个回车确认操作
