@@ -1,4 +1,4 @@
-client.welcome=Welcome to use my program!
+client.welcome=Welcome to use MineToys!
 client.input=Please enter a command:
 client.quit.confirm=Press enter to confirm!
 client.bye=Goodbye!
@@ -54,5 +54,9 @@ sci.name=Icon solid color fill
 sci.params=Icon file, fill color hexadecimal value, output file suffix
 sci.desc=Fill solid color to the non-transparent part of the icon
 wtt.name=Sound to text
-wtt.params=Sound folder
+wtt.params=Sound folder,hot word txt
 wtt.desc=Use funasr to convert wav to text file (need to start local funasr service)
+
+ew.name=Export Hot Words
+ew.params=Text file or directory, frequency level, output dir,output file name,max output num
+ew.desc=Extract high-frequency words from text file or directory, frequency level is a number, the larger, the less common

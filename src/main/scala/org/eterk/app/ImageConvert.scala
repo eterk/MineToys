@@ -49,6 +49,7 @@ object ImageConvert extends App {
 
   override def appKey: String = "ic"
 
+  override def paramTypeSeq: Seq[String] = Seq("RADIO:bmp,png", "FILE:svg", "TEXT")
 
   override def execute(params: String*): Unit = {
     val func =
@@ -56,7 +57,23 @@ object ImageConvert extends App {
         case isBMP if isBMP.toLowerCase == "bmp" => svgToBmp _
         case isPNG if isPNG.toLowerCase == "png" => svgToPNG _
       }
-    func(params(1), params(2))
+
+    require(params(1).endsWith(".svg"))
+    val input = params(1)
+
+    val output = {
+      val name =
+        if (params(2) == "") {
+          System.currentTimeMillis()
+        } else {
+          params(2)
+        }
+
+      new File(input).getParent + "/" + name + ".png"
+    }
+
+
+    func(input, output)
 
 
   }

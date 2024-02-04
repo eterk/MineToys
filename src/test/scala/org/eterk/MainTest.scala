@@ -24,6 +24,10 @@ class MainTest extends AnyFunSuiteLike {
     //    Main.main(Array("-e:wtt,S:\\lib\\video"))
     //    Main.main(Array("-e:mew,S:\\lib\\video,16"))
   }
+  test("wtt"){
+    Main.main(Array("-e:wtt;s:/lib/fujian;"))
+  }
+
   test("list"){
     Main.main(Array("--list:all"))
     Main.main(Array("--list:active"))

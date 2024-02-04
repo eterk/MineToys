@@ -9,6 +9,7 @@ object HelloApp extends App {
 
   override def appKey: String = "hello"
 
+  override def paramTypeSeq: Seq[String] = Seq("TEXT")
 
   override def execute(params: String*): Unit = {
     val context =
@@ -16,7 +17,7 @@ object HelloApp extends App {
         case Nil => Messages("hello.default")
         case seq => seq.mkString(" ")
       }
-    println(s"${Messages("hello.hello")} $context!")
+    msg(s"${Messages("hello.hello")} $context!")
   }
 
 

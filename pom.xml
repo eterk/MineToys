@@ -15,8 +15,10 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.eterk.Main</main.class>
-        <client.class>org.eterk.Client</client.class>
+        <cli.class>org.eterk.InteractiveCommandLine</cli.class>
+        <gui.class>org.eterk.GUIClient</gui.class>
         <app.name>mineToys</app.name>
+        <app.version>${version}.0.0</app.version>
     </properties>
 
 
@@ -73,6 +75,40 @@
             <artifactId>commons-imaging</artifactId>
             <version>1.0-alpha2</version>
         </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>4.5.5</version>
+            <classifier>models-chinese</classifier>
+        </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>4.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>4.5.5</version>
+            <classifier>models</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.json4s</groupId>
+            <artifactId>json4s-native_2.13</artifactId>
+            <version>4.1.0-M4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java</artifactId>
+            <version>3.3.4</version>
+        </dependency>
+
+
+        <!--        <dependency>-->
+        <!--            <groupId>edu.stanford.nlp</groupId>-->
+        <!--            <artifactId>stanford-corenlp</artifactId>-->
+        <!--            <version>4.3.1</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.soualid.colorthief</groupId>
             <artifactId>colorthief</artifactId>
@@ -231,20 +267,18 @@
                 <version>2.5.0</version>
                 <executions>
                     <execution>
-                        <id>l4j-gui</id>
+                        <id>cli</id>
                         <phase>package</phase>
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
                             <!-- The name of the exe file to create -->
-                            <outfile>target/${artifactId}.exe</outfile>
+                            <outfile>target/${artifactId}${app.version}.exe</outfile>
                             <!-- The name of the jar file to wrap -->
                             <jar>target/${artifactId}-${version}.jar</jar>
-
-
                             <classPath>
-                                <mainClass>${client.class}</mainClass>
+                                <mainClass>${cli.class}</mainClass>
                                 <addDependencies>false</addDependencies>
                                 <preCp>anything</preCp>
                             </classPath>
@@ -256,14 +290,50 @@
                             <icon>src/main/resources/${app.name}.ico</icon>
                             <!-- The version information to display for the exe file -->
                             <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
-                                <txtFileVersion>1.0.0.0</txtFileVersion>
-                                <fileDescription>${app.name}</fileDescription>
-                                <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>1.0.0.0</txtProductVersion>
+                                <fileVersion>${app.version}</fileVersion>
+                                <txtFileVersion>${app.version}</txtFileVersion>
+                                <fileDescription>一些好用的windows 小工具</fileDescription>
+                                <productVersion>${app.version}</productVersion>
+                                <txtProductVersion>${app.version}</txtProductVersion>
                                 <productName>${app.name}</productName>
                                 <internalName>${app.name}</internalName>
-                                <originalFilename>${app.name}.exe</originalFilename>
+                                <originalFilename>${app.name}-cli-${app.version}.exe</originalFilename>
+                                <companyName>${groupId}</companyName>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <!-- The name of the exe file to create -->
+                            <outfile>target/${artifactId}${app.version}.exe</outfile>
+                            <!-- The name of the jar file to wrap -->
+                            <jar>target/${artifactId}-${version}.jar</jar>
+                            <classPath>
+                                <mainClass>${gui.class}</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <!-- The minimum JRE version required -->
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                            </jre>
+                            <!-- The icon file to use for the exe file -->
+                            <icon>src/main/resources/${app.name}.ico</icon>
+                            <!-- The version information to display for the exe file -->
+                            <versionInfo>
+                                <fileVersion>${app.version}</fileVersion>
+                                <txtFileVersion>${app.version}</txtFileVersion>
+                                <fileDescription>一些好用的windows 小工具</fileDescription>
+                                <productVersion>${app.version}</productVersion>
+                                <txtProductVersion>${app.version}</txtProductVersion>
+                                <productName>${app.name}</productName>
+                                <internalName>${app.name}</internalName>
+                                <originalFilename>${app.name}${app.version}_gui.exe</originalFilename>
                                 <companyName>${groupId}</companyName>
                             </versionInfo>
 
@@ -273,33 +343,33 @@
             </plugin>
 
 
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-jar-plugin</artifactId>-->
-            <!--                <version>3.2.0</version>-->
-            <!--                <configuration>-->
-            <!--                    <archive>-->
-            <!--                        <compress>true</compress>-->
-            <!--                    </archive>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <compress>true</compress>
+                    </archive>
+                </configuration>
+            </plugin>
             <!--            &lt;!&ndash; 使用maven-dependency-plugin来分析项目的依赖 &ndash;&gt;-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-dependency-plugin</artifactId>-->
-            <!--                <version>3.2.0</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>analyze</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>analyze-only</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <failOnWarning>true</failOnWarning>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>true</failOnWarning>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

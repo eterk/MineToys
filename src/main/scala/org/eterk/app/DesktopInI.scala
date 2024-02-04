@@ -1,15 +1,17 @@
 package org.eterk.app
 
+import org.eterk.util.Config
 import org.eterk.util.Util.isIconFile
 
-import scala.collection.mutable
 import java.io.File
+import scala.collection.mutable
+
 import scala.tools.nsc.io.{File => ScalaFile}
-import scala.sys.process._
 
 
 object DesktopInI extends App {
 
+  import org.eterk.util.PowerShellExecutor.runPowershell
   // 导入scala.sys.process包，用于执行powershell命令
 
   // 导入scala.util.logging包，用于记录日志
@@ -20,9 +22,19 @@ object DesktopInI extends App {
 
     parseIconAndFolder(src, tgt)
       .foreach {
-        case (iconPath, folderPath) =>
+        case (iconPath, folderPath) => {
+
           setDesktopIni(folderPath, "", iconPath, "", 1)
+        }
       }
+  }
+
+  def createIfDirNotExist(folderPath: String): Unit = {
+    val file = new File(folderPath)
+    if (!file.exists()) {
+      msg(s"${folderPath} not exists; create new one;")
+      file.mkdir()
+    }
   }
 
 
@@ -58,8 +70,8 @@ object DesktopInI extends App {
             // 将图标地址和文件夹添加到结果Seq中
             result.append((file.getAbsolutePath, tgtDir.getAbsolutePath))
           } else {
-            // 如果不符合条件，记录一条警告日志
-            println(s"not found same name dir: ${file.getName}")
+            createIfDirNotExist(tgtDir.getAbsolutePath)
+            result.append((file.getAbsolutePath, tgtDir.getAbsolutePath))
           }
         }
       }
@@ -68,12 +80,6 @@ object DesktopInI extends App {
     result.toSeq
   }
 
-  def runPowershell(cmd: String): Unit = {
-    // 拼接powershell命令字符串，使用Bypass执行策略，注意转义引号和空格
-    val fullCmd = s"""powershell -ExecutionPolicy Bypass -Command "$cmd""""
-    // 执行命令，忽略输出
-    fullCmd.!
-  }
 
   // 定义一个函数，设置文件的权限为完全控制，传入一个字符串，表示文件路径
   def setFileFullControl(filePath: String): Unit = {
@@ -148,4 +154,6 @@ object DesktopInI extends App {
   override def appKey: String = "sito"
 
   override def execute(params: String*): Unit = setDesktopIni(params(0), params(1))
+
+  override def paramTypeSeq: Seq[String] = Seq(DIR, DIR)
 }

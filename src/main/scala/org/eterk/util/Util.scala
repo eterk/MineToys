@@ -7,6 +7,7 @@ import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.{File, FileOutputStream}
 import java.util
+import scala.annotation.tailrec
 
 object Util {
 
@@ -225,13 +226,13 @@ object Util {
   }
 
   // 定义一个函数，接受一个文件名的序列，返回一个字符串
-  def concatFiles(fileNames: Seq[String]): String = {
+  def concatFiles(fileNames: Seq[String],encode:String): String = {
     // 创建一个空的字符串构建器
     val sb = new StringBuilder()
     // 遍历每个文件名
     for (fileName <- fileNames) {
       // 使用scala.io.Source从文件中读取内容，指定编码为utf-8
-      val source = scala.io.Source.fromFile(fileName, "utf-8")
+      val source = scala.io.Source.fromFile(fileName, encode)
       // 将文件内容追加到字符串构建器中
       sb.append(source.mkString)
       // 关闭文件
@@ -252,43 +253,32 @@ object Util {
     s"${start}_${suffix}$format"
   }
 
-  // 定义一个函数，接受三个参数，一个是文件地址，一个是文件结尾符合的一个条件，一个是是否递归
   def filterFiles(path: String, condition: String => Boolean, recursive: Boolean): Seq[String] = {
-    // 创建一个文件对象，用来表示输入的文件地址
-    val file = new File(path)
 
-    // 定义一个空的序列，用来存放符合条件的文件地址
-    var result = Seq.empty[String]
+    var first = true
 
-    // 判断输入的文件是否存在，是否是一个文件或者文件夹
-    if (file.exists) {
-      if (file.isFile) {
-        // 如果是一个文件，判断文件名是否符合条件
-        val abPath = file.getAbsolutePath
-        if (condition(abPath)) {
-          // 如果符合条件，将文件地址添加到结果序列中
-          result = result :+ abPath
-        }
-      } else if (file.isDirectory) {
-        // 如果是一个文件夹，获取文件夹中的所有文件和子文件夹
-        val files = file.listFiles
-
-        // 遍历所有的文件和子文件夹
-        for (f <- files) {
-          // 如果是一个文件，判断文件名是否符合条件
-          if (f.isFile && condition(f.getName)) {
-            // 如果符合条件，将文件地址添加到结果序列中
-            result = result :+ f.getAbsolutePath
-          } else if (f.isDirectory && recursive) {
-            // 如果是一个子文件夹，并且递归参数为真，调用自身函数，将子文件夹中符合条件的文件地址添加到结果序列中
-            result = result ++ filterFiles(f.getAbsolutePath, condition, recursive)
-          }
-        }
+    def needRec: Boolean = {
+      if (first) {
+        first = false
+        true
+      } else {
+        recursive
       }
     }
 
-    // 返回结果序列
-    result
+    def rec(file: File, res: Seq[File]): Seq[File] = {
+
+      file match {
+        case error if !error.exists() || !error.canRead => res
+        case d if d.isDirectory && needRec =>
+          res ++ d.listFiles().flatMap(f => rec(f, res))
+        case f if condition(f.getAbsolutePath) => res :+ f
+        case _ => res
+      }
+
+    }
+
+    rec(new File(path), Seq.empty).map(_.getAbsolutePath)
   }
 
   // 定义一个函数，判断一个文件是否是icon文件，即扩展名为.ico
@@ -305,6 +295,13 @@ object Util {
     } else {
       fileName
     }
+  }
+
+  def normalize(v: Int, min: Int, max: Int): Int => Double = {
+    require(min < max)
+    // 如果最大值和最小值相等，说明序列中的元素都相同，无法归一化，返回一个空序列
+    (x: Int) => (x - min).toDouble / (max - min) * v
+
   }
 
 }

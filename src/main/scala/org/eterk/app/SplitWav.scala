@@ -10,6 +10,8 @@ import scala.language.implicitConversions
 
 object SplitWav extends App {
 
+  //一个将字符串转换成16进制字符串
+
   // 定义一个函数，接受一个音频文件的路径，一个分割的时间间隔（以秒为单位），以及音频的采样率，声道数，比特率和编码格式作为参数
   def splitAudioFile(filePath: String,
                      interval: Int,
@@ -20,7 +22,7 @@ object SplitWav extends App {
     val fc = fis.getChannel
 
 
-    println(audioAttribute)
+    msg(audioAttribute.toString)
     // 根据不同的编码格式，确定文件头部的字节数
     // 这里只考虑了aac和mp3两种格式，其他格式可能需要另外处理
     val headerSize = audioAttribute.codec match {
@@ -94,12 +96,15 @@ object SplitWav extends App {
 
   override def appKey: String = "sw"
 
+  override def paramTypeSeq: Seq[String] = Seq("DIR:wav", "INT")
+
   override def execute(params: String*): Unit = {
 
     val path = params(0)
 
 
     val secondInterval: Int = params(1).toInt * 60
+
 
     splitAudioFile(path, secondInterval, get(path))
 

@@ -88,7 +88,7 @@ object GradientIcon extends App {
     listFiles(iconDir, "ico", recursive = false)
       .foreach {
         icon =>
-          println(icon)
+          msg(icon)
           nameColors.foreach {
             case (jpgName, colors) =>
               colorNums
@@ -110,19 +110,21 @@ object GradientIcon extends App {
   }
 
 
-
-
   override def appKey: String = "fi"
+
   override def appName: String = "fill_icon"
+
   override def paramSeq: Seq[String] = Seq("icon_path", "color_path", "color_num", "degree")
 
   override def appDescription: String = "给图标非透明部分填色"
+
+  override def paramTypeSeq: Seq[String] = Seq("DIR:ico", "FILE_DIR:jpg,png,txt", "CHECKBOX:2,3,4,5", "CHECKBOX:0,45,90,135,180,225,270")
 
   override def execute(params: String*): Unit = {
 
     val nameColors: Map[String, Seq[Color]] = params(1) match {
       case dirOrImg if new File(dirOrImg).isDirectory || Util.isImage(dirOrImg) => getDominantColorMap(dirOrImg)
-      case txt => DominantColor.jsonToMap(Util.concatFiles(txt :: Nil))
+      case txt => DominantColor.jsonToMap(Util.concatFiles(txt :: Nil,"utf-8"))
     }
 
 

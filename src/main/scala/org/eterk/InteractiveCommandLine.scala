@@ -1,11 +1,11 @@
 package org.eterk
 
 import com.osinka.i18n.Messages
-import org.eterk.util.{Config, Theme}
+import org.eterk.util.{Config, Logger, Theme}
 
 import scala.io.StdIn.readLine
 
-object Client {
+object InteractiveCommandLine extends Logger {
 
   import org.eterk.util.LanguageSetting._
 
@@ -36,14 +36,14 @@ object Client {
 
 
   def main(args: Array[String]): Unit = {
-    println(Messages("client.welcome"))
+    msg(Messages("client.welcome"))
     Theme.printBanner()
-    println(Config.parser.usage)
+    msg(Config.parser.usage)
 
     // 创建一个终端对象
     var running = true
     while (running) {
-      Config.msg(Config.showInfo() + " " + Messages("client.bye.tips"))
+      msg(Config.showInfo() + " " + Messages("client.bye.tips"))
       // 读取用户的输入
 
       val input = readLine(Messages("client.input"))
@@ -52,11 +52,11 @@ object Client {
       input match {
         case c if "exit" == c || c == "q" =>
           // 在这里添加一个回车确认操作
-          println(Messages("client.quit.confirm"))
+          msg(Messages("client.quit.confirm"))
           val confirm = readLine()
           if (confirm == "") {
             // 在这里添加一个bye和停留1秒的操作
-            println(Messages("client.bye"))
+            msg(Messages("client.bye"))
             Thread.sleep(1000)
             running = false
           }

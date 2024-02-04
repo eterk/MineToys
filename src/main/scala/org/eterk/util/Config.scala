@@ -8,33 +8,18 @@ object Config {
 
   import LanguageSetting._
 
-  var group: String = "test"
-
-  var debug: Boolean = false
+  var group: String = "audio"
 
 
   def showInfo(): String = {
     Seq(
-      s"${Messages("config.env.debug")}: ${Config.debug}",
+      s"${Messages("config.env.debug")}: ${Logger.debug}",
       s"${Messages("config.env.lang")}: ${LanguageSetting.lang.language}",
       s"${Messages("config.env.group")}: ${Config.group.group}").mkString(" ")
   }
 
 
-  def msg(f: String): Unit = {
-    if (debug) {
-      println(f)
-    }
-  }
-
-  def debugDo(f: () => Unit): Unit = {
-    if (debug) {
-      f()
-    }
-  }
-
-
-  def apply(): Config = new Config(None, group, LanguageSetting.lang.language, debug, None, None)
+  def apply(): Config = new Config(None, group, LanguageSetting.lang.language, Logger.debug, None, None)
 
   // 自定义的类型转换器
   implicit val seqStringConverter: scopt.Read[Seq[String]] =
@@ -77,7 +62,7 @@ object Config {
       .abbr("d")
       .valueName("0 ,1")
       .action((x, c) => {
-        Config.debug = x
+        Logger.setDebug(x)
         c.copy(debug = x)
       })
       .text(s"${Messages("config.parser.debug")}:  --debug:0 --d:1")

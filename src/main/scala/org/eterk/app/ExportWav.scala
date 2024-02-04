@@ -28,7 +28,7 @@ object ExportWav extends App {
 
   // 定义一个函数，接受一个mp4文件名，返回一个wav文件名
   private def mp4ToWav(mp4FileName: String): String = {
-    println(mp4FileName)
+    msg(mp4FileName)
     // 创建一个源文件对象
     val source: File = new File(mp4FileName)
     // 创建一个目标文件对象，使用相同的文件名，但是扩展名为wav
@@ -55,13 +55,15 @@ object ExportWav extends App {
 
   override def appKey: String = "mew"
 
+  override def paramTypeSeq: Seq[String] = Seq("FILE:mp4,wmv", "INT")
 
   override def execute(params: String*): Unit = {
 
     val res: Seq[String] =
       Util
-        .filterFiles(params.head, _.endsWith(".mp4"), recursive = false)
+        .filterFiles(params.head, x => x.endsWith(".mp4") || x.endsWith("wmv"), recursive = false)
         .map(mp4ToWav)
+
 
     if (params(1) != "_") {
       res.foreach {

@@ -2,10 +2,11 @@ package org.eterk.app
 
 
 import com.osinka.i18n.Messages
+import org.eterk.util.Logger
 
 import scala.annotation.varargs
 
-trait App {
+trait App extends Logger {
 
   import org.eterk.util.LanguageSetting._
 
@@ -20,6 +21,8 @@ trait App {
 
   def paramSeq: Seq[String] = Messages(s"${appKey}.params").split(",")
 
+  def paramTypeSeq: Seq[String]
+
   /**
    * a  detailed about app's function and target
    */
@@ -29,3 +32,4 @@ trait App {
   def execute(params: String*): Unit
 
 }
+

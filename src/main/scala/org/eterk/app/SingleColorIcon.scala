@@ -39,20 +39,20 @@ object SingleColorIcon extends App {
 
   override def appKey: String = "sci"
 
+  override def paramTypeSeq: Seq[String] = Seq("FILE_DIR:ico", "TEXT", "TEXT")
 
   override def execute(params: String*): Unit = {
 
-    val path = params(0)
 
     val color = params(1).split(",")
 
     val name = params(2).split(",")
 
-    val seq: Seq[String] = Util.filterFiles(path, x => Util.isIconFile(new File(x)), recursive = false)
+    val seq: Seq[String] = Util.filterFiles(params(0), x => Util.isIconFile(new File(x)), recursive = false)
 
 
     if (color.length != name.length) {
-      println(s"color.size!=name.size ${color.mkString(",")} get ${color.size}, but ${name.mkString(",")} get ${name.size}")
+      msg(s"color.size!=name.size ${color.mkString(",")} get ${color.size}, but ${name.mkString(",")} get ${name.size}")
     }
 
     val colorName = color.zip(name)

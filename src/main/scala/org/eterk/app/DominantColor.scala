@@ -3,12 +3,14 @@ package org.eterk.app
 import org.eterk.util.Util
 
 import java.awt.Color
+import java.io.File
 
 object DominantColor extends App {
 
 
   override def appKey: String = "edc"
 
+  override def paramTypeSeq: Seq[String] = Seq("FILE_DIR:jpeg,png", "RADIO:code,json", DIR)
 
   override def execute(params: String*): Unit = {
 
@@ -23,7 +25,7 @@ object DominantColor extends App {
 
     val outputFunc: String => Unit =
       params(2) match {
-        case "print" => println
+        case "print" => msg
         case path => write(path, _)
       }
 
@@ -125,6 +127,8 @@ object DominantColor extends App {
             .replaceAll(" ", "")
           val value = x(1)
             .replaceAll("\\[", "")
+            .replaceAll("\r", "")
+            .replaceAll("\n", "")
             .replaceAll("]", "")
             .replaceAll(" ", "")
             .replaceAll("\"", "")

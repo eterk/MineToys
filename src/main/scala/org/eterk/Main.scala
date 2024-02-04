@@ -2,13 +2,13 @@ package org.eterk
 
 import app.App
 import com.osinka.i18n.{Lang, Messages}
-import org.eterk.util.{Config, LanguageSetting}
+import org.eterk.util.{Config, LanguageSetting, Logger}
 
 import scala.util.{Failure, Success, Try}
 
 
 // 定义一个 scopt 的 OParser，来解析命令行参数
-object Main {
+object Main extends Logger {
 
   import org.eterk.util.Theme._
   import LanguageSetting._
@@ -30,8 +30,8 @@ object Main {
           val desc = app.appDescription
           val param = app.paramSeq.magentaYellow(";")
 
-          println(s"  $i.$key:" + param)
-          println("  ".padTo(12, ' ') + desc)
+          msg(s"  $i.$key:" + param)
+          msg("  ".padTo(12, ' ') + desc)
 
       }
   }
@@ -48,9 +48,9 @@ object Main {
 
     appGroups.foreach {
       group =>
-        println(group.group)
+        msg(group.group)
         if (!AppFactory.appGroup.isDefinedAt(group)) {
-          println(s"unknown ${group.group}")
+          msg(s"unknown ${group.group}")
         } else {
           listApp(AppFactory.appGroup(group))
         }
@@ -62,7 +62,7 @@ object Main {
   def help(name: String): Unit = {
     findApp(name) match {
       case Some(app) =>
-        println()
+        msg("")
         val head = s"【${app.appKey.appKey}】.${app.appName}"
         val param = app.paramSeq.zipWithIndex.map {
           case (k, i) => (i + 1) + "." + k
@@ -73,9 +73,10 @@ object Main {
              |${param}
              |${app.appDescription}
              |""".stripMargin
-        println(info)
+        msg(info)
       case None =>
-        println(s"No such app: ${name.appKey},available name ${AppFactory.availableApp}")
+        msg(s"No such app: ${name.appKey} in ${Config.group.group},available name: ${AppFactory.availableApp.map(_.appKey.appKey).mkString(",")}")
+
     }
   }
 
@@ -84,23 +85,23 @@ object Main {
     import org.eterk.util.ColorString._
     findApp(name) match {
       case Some(app) =>
-        Config.msg(s"${Messages("exe.param.app")}: ${name.appKey}")
-        Config.msg(s"${Messages("exe.param.param")}: ${args.toSeq.magentaYellow(";")}")
+        msg(s"${Messages("exe.param.app")}: ${name.appKey}")
+        msg(s"${Messages("exe.param.param")}: ${args.toSeq.magentaYellow(";")}")
         if (args.length != app.paramSeq.length) {
-          println(s"${Messages("exe.params.length.error")}  need  ${app.paramSeq.length}, given ${args.length}")
+          msg(s"${Messages("exe.params.length.error")}  need  ${app.paramSeq.length}, given ${args.length}")
           return
         }
 
         Try(app.execute(args: _*)) match {
           case Success(value) => Messages("exe.success")
           case Failure(exception) =>
-            Config.debugDo(() => exception.printStackTrace())
+            debugDo(() => exception.printStackTrace())
             help(name.appKey)
             Thread.sleep(2000)
         }
 
       case None =>
-        println(s"No such app: ${name.appKey} in app group [${Config.group.group}]")
+        msg(s"No such app: ${name.appKey} in app group [${Config.group.group}]")
     }
   }
 
@@ -113,23 +114,29 @@ object Main {
     Config.parser.parse(args, Config()) match {
 
       case Some(config) =>
+        Try {
+          LanguageSetting.setLang(Lang(config.language))
 
-        LanguageSetting.setLang(Lang(config.language))
-
-        AppFactory.setActiveGroup(config.group)
+          AppFactory.setActiveGroup(config.group)
 
 
-        config.help.foreach(appName => help(appName))
+          config.help.foreach(appName => help(appName))
 
-        config.list.foreach(listApps)
+          config.list.foreach(listApps)
 
-        config.exe.foreach(args => {
-          executeApp(args.head, args.tail)
-        })
+          config.exe.foreach(args => {
+            executeApp(args.head, args.tail)
+          })
+        } match {
+          case Success(s) =>
+          case Failure(e) => msg(args.mkString(",") + " failed")
+
+        }
+
 
       case None =>
         // 如果解析失败，显示错误信息
-        println(Messages("config.wrong.input"))
+        msg(Messages("config.wrong.input"))
     }
 
   }
