@@ -2,10 +2,12 @@ package org.eterk.gui
 
 import com.osinka.i18n.Lang
 import org.apache.commons.imaging.Imaging
-import org.eterk.AppFactory
-import org.eterk.gui.input.RadioButtonInput
+import org.eterk.{AppFactory, Resource}
+import org.eterk.gui.input.{CollectionPanel, RadioButtonInput, StatusIndicator}
+import org.eterk.server.FunasrService
 import org.eterk.util.{Config, LanguageSetting, Logger}
 
+import java.awt.Dimension
 import java.io.File
 import scala.swing._
 
@@ -46,12 +48,15 @@ object MainPanel extends BorderPanel {
 object HeadPanel extends BoxPanel(Orientation.Horizontal) {
 
   //定义一个版本号标签
-  val versionLabel: Label = new Label {
+  private val versionLabel =
+    new ComponentWrapper {
+      override def component: Component = new Label {
 
-    text = "Version 1.0"
-    horizontalAlignment = Alignment.Center
+        text = "Version 1.0"
+        horizontalAlignment = Alignment.Center
 
-  }
+      }
+    }
 
 
   val group: RadioButtonInput = RadioButtonInput("group", AppFactory.appGroup.keySet.toSeq, MainPage.groupCall)
@@ -60,13 +65,14 @@ object HeadPanel extends BoxPanel(Orientation.Horizontal) {
 
   val debug: RadioButtonInput = RadioButtonInput("debug", Seq("开启", "关闭"), x => Logger.setDebug(if (x == "开启") true else false))
 
+  val funasr: ComponentWrapper = new ComponentWrapper {
+    override def component: Component = StatusIndicator("Funasr", () => FunasrService.service.status(), 5000)
+  }
 
-  Seq(group, language, debug).foreach(xyz => {
-    contents += xyz.panel
-  })
+  val elements: CollectionPanel = CollectionPanel(Seq(group, language, debug, funasr, versionLabel), new Dimension(20, 50), Orientation.Horizontal)
 
-  contents += versionLabel
 
+  contents += elements
 
 }
 
@@ -109,7 +115,7 @@ class MainPage() extends SimpleSwingApplication {
     val dimension = new Dimension(2300, 6 * 100 + 100)
 
     title = "Mine Toys"
-    iconImage = Imaging.getBufferedImage(new File(getClass.getResource("/mineToys.ico").getFile))
+    iconImage = Imaging.getBufferedImage(Resource.iconImage)
     contents = MainPanel
     maximumSize = dimension
     minimumSize = dimension
@@ -120,7 +126,7 @@ class MainPage() extends SimpleSwingApplication {
   override def top: Frame = {
     {
       // 设置窗口的位置为屏幕的中心点
-      frame.peer.setLocation(1000,1000)
+      frame.peer.setLocation(1000, 1000)
       // 返回窗口对象
       frame
     }

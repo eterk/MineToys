@@ -7,6 +7,8 @@ import scala.util.Try
 
 object FunasrService extends Logger {
 
+  lazy val service: FunasrService =defaultService()
+
   def defaultService(dataHome: String): FunasrService = {
     val str =
       dataHome
@@ -22,10 +24,26 @@ object FunasrService extends Logger {
     FunasrService(containerName, serverLogName, dataHome)
   }
 
+  def defaultService(): FunasrService = {
+
+    val containerName = "mt-fs-chinese"
+
+    val serverLogName = s"funasr-service-$containerName-${System.nanoTime()}"
+
+
+    FunasrService(containerName, serverLogName)
+  }
+
 
   def apply(containerName: String, serverLogName: String, dataHome: String): FunasrService = {
     val linuxPath = PathUtil.windowsToWsl(dataHome)
     val container = FunasrContainerService(containerName, linuxPath)
+    val server = FunasrServerService(serverLogName, container)
+    new FunasrService(container, server)
+  }
+
+  def apply(containerName: String, serverLogName: String): FunasrService = {
+    val container = FunasrContainerService(containerName, "/mnt/s/")
     val server = FunasrServerService(serverLogName, container)
     new FunasrService(container, server)
   }

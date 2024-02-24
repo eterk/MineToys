@@ -20,4 +20,13 @@ class FunasrServiceTest extends AnyFunSuiteLike {
     service.stop()
   }
 
+  test("test"){
+    println(FunasrService.service.status())
+  }
+  test("da"){
+    import scala.sys.process._
+//    println("docker ps".!!)
+    println("docker.exe".!!)
+  }
+
 }

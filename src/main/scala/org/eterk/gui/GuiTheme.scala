@@ -6,8 +6,8 @@ import scala.swing.{Dimension, Font}
 object GuiTheme {
   object FontConfig {
 
-    val h1: Font = Font("Arial", Font.Plain, 24)
-    val h2: Font = Font("Arial", Font.Plain, 15)
+    val h1: Font = Font("微软雅黑", Font.Plain, 24)
+    val h2: Font = Font("微软雅黑", Font.Plain, 15)
   }
 
   object Dim {

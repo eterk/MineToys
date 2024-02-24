@@ -29,7 +29,12 @@ trait InputPanel[T] extends ComponentWrapper {
   // 输入的结果数据
   final def result: T = res
 
+  private final var counter: Int = 0
+
+  def getCounter: Int =counter
+
   final def setResult(i: T): Unit = {
+    counter += 1
     this.res = i
   }
 

@@ -67,7 +67,8 @@ trait Logger {
 
   protected def msg(f: String): Unit = {
     if (debug) {
-      println(callLocation + "   " + f)
+//      println(callLocation + "   " + f)
+      println(f)
     }
   }
 

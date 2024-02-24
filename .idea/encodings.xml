@@ -2,6 +2,12 @@
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/cmd/icon_config.ps1" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mt-cli/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mt-cli/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mt-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mt-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mt-gui/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mt-gui/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />

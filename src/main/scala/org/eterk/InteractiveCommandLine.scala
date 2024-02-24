@@ -24,15 +24,15 @@ object InteractiveCommandLine extends Logger {
     sb.toString
   }
 
-  def jlineTeminal() {
-    import org.jline.reader._
-    import org.jline.terminal._
-    val terminal: Terminal = TerminalBuilder.terminal()
-    //      .builder().encoding(Charset.forName("UTF-8")).build()
-
-    val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
-
-  }
+//  def jlineTeminal() {
+//    import org.jline.reader._
+//    import org.jline.terminal._
+//    val terminal: Terminal = TerminalBuilder.terminal()
+//    //      .builder().encoding(Charset.forName("UTF-8")).build()
+//
+//    val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
+//
+//  }
 
 
   def main(args: Array[String]): Unit = {

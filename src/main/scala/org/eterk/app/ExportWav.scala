@@ -55,7 +55,7 @@ object ExportWav extends App {
 
   override def appKey: String = "mew"
 
-  override def paramTypeSeq: Seq[String] = Seq("FILE:mp4,wmv", "INT")
+  override def paramTypeSeq: Seq[String] = Seq("FILE_DIR:mp4,wmv", "INT")
 
   override def execute(params: String*): Unit = {
 

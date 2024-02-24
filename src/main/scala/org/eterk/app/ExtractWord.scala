@@ -1,72 +1,14 @@
 package org.eterk.app
 
-import edu.stanford.nlp.ling.CoreAnnotations
-import org.eterk.util.Util
 
-import java.io.File
+import org.eterk.util.{Nlp, Util}
+
 import scala.collection.mutable
 import scala.language.implicitConversions
 import scala.util.Try
 
-
 object ExtractWord extends App {
 
-  import edu.stanford.nlp.pipeline._
-
-  import java.util.Properties
-
-
-  // 定义一个函数，用于创建一个中文的 stanfordnlp 对象
-  def createChinesePipeline(): StanfordCoreNLP = {
-    // 创建一个属性对象，用于设置语言和模型
-    val props = new Properties()
-
-    val stream = this.getClass.getResourceAsStream("/StanfordCoreNLP-chinese.properties")
-
-    props.load(stream)
-
-    props.setProperty("annotators", "tokenize, ssplit, pos,lemma, ner")
-
-
-    // 创建一个中文的 stanfordnlp 对象
-    val pipeline = new StanfordCoreNLP(props)
-    // 返回 stanfordnlp 对象
-    pipeline
-  }
-
-  // 定义一个函数，用于从一段中文字符串中导出一些名词，人名地名这种
-  def extract(text: String, pipeline: StanfordCoreNLP, map: collection.mutable.Map[String, collection.mutable.Map[(String, String), Int]]) = {
-    // 创建一个注释对象，用于存储分析结果
-    val document = new Annotation(text)
-
-    pipeline.annotate(document)
-    // 创建一个空的列表，用于存储名词
-
-    import scala.jdk.CollectionConverters._
-
-    document.get(classOf[CoreAnnotations.SentencesAnnotation])
-      .asScala
-      .flatMap(_.get(classOf[CoreAnnotations.TokensAnnotation]).asScala)
-      .foreach(token => {
-        // 获取词的文本
-        val word: String = token.get(classOf[CoreAnnotations.TextAnnotation])
-        if (word.length >= 2) {
-          // 获取词的词性
-          val pos: String = token.get(classOf[CoreAnnotations.PartOfSpeechAnnotation])
-          // 获取词的实体类型
-          val ner: String = token.get(classOf[CoreAnnotations.NamedEntityTagAnnotation])
-
-
-          val key = pos -> ner
-          val count = map.getOrElseUpdate(word, create.tupled(key))
-          val num = count.getOrElseUpdate(pos -> ner, 0)
-          count.update(key, num + 1)
-
-        }
-
-      })
-
-  }
 
   def wikiFreWord(num: Int): Seq[String] = {
     //    https://en.wiktionary.org/wiki/Appendix:Mandarin_Frequency_lists
@@ -96,10 +38,10 @@ object ExtractWord extends App {
     val map: mutable.Map[String, mutable.Map[(String, String), Int]] = collection.mutable.Map[String, collection.mutable.Map[(String, String), Int]]()
 
     // 调用函数，创建一个中文的 stanfordnlp 对象
-    val pipeline = createChinesePipeline()
+    val pipeline = Nlp().createChinesePipeline()
     //
     //    // 调用函数，从测试字符串中导出一些名词，人名地名这种
-    extract(text, pipeline, map)
+    Nlp().extract(text, pipeline, map)
 
     import org.eterk.util.SeqExtension._
 

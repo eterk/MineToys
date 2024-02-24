@@ -17,6 +17,7 @@
         <main.class>org.eterk.Main</main.class>
         <cli.class>org.eterk.InteractiveCommandLine</cli.class>
         <gui.class>org.eterk.GUIClient</gui.class>
+        <client.class>org.eterk.InteractiveCommandLine</client.class>
         <app.name>mineToys</app.name>
         <app.version>${version}.0.0</app.version>
     </properties>
@@ -190,6 +191,12 @@
             <version>2.4.1</version>
         </dependency>
         <dependency>
+            <groupId>org.scalaj</groupId>
+            <artifactId>scalaj-http_2.13</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.jline</groupId>
             <artifactId>jline</artifactId>
             <version>3.25.0</version>
@@ -198,28 +205,6 @@
 
     </dependencies>
 
-    <!-- 使用proguard-maven-plugin来对jar包进行混淆和优化 -->
-    <!--            <plugin>-->
-    <!--                <groupId>com.github.wvengen</groupId>-->
-    <!--                <artifactId>proguard-maven-plugin</artifactId>-->
-    <!--                <version>2.3.1</version>-->
-    <!--                <executions>-->
-    <!--                    <execution>-->
-    <!--                        <phase>package</phase>-->
-    <!--                        <goals>-->
-    <!--                            <goal>proguard</goal>-->
-    <!--                        </goals>-->
-    <!--                    </execution>-->
-    <!--                </executions>-->
-    <!--                <configuration>-->
-    <!--                    <obfuscate>true</obfuscate>-->
-    <!--&lt;!&ndash;                    <optimize>true</optimize>&ndash;&gt;-->
-    <!--                    <injar>${project.build.finalName}.jar</injar>-->
-    <!--                    <outjar>${project.build.finalName}-proguard.jar</outjar>-->
-    <!--                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>-->
-    <!--                </configuration>-->
-    <!--            </plugin>-->
-    <!-- 使用maven-jar-plugin来对jar包进行压缩 -->
 
     <build>
         <plugins>
@@ -236,30 +221,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- 使用maven-shade-plugin来打包jar包，并去除一些未使用的类或资源 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <minimizeJar>true</minimizeJar>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>${main.class}</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <!-- https://mvnrepository.com/artifact/com.akathist.maven.plugins.launch4j/launch4j-maven-plugin -->
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
@@ -267,91 +228,82 @@
                 <version>2.5.0</version>
                 <executions>
                     <execution>
-                        <id>cli</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <!-- The name of the exe file to create -->
-                            <outfile>target/${artifactId}${app.version}.exe</outfile>
-                            <!-- The name of the jar file to wrap -->
-                            <jar>target/${artifactId}-${version}.jar</jar>
-                            <classPath>
-                                <mainClass>${cli.class}</mainClass>
-                                <addDependencies>false</addDependencies>
-                                <preCp>anything</preCp>
-                            </classPath>
-                            <!-- The minimum JRE version required -->
-                            <jre>
-                                <minVersion>1.8.0</minVersion>
-                            </jre>
-                            <!-- The icon file to use for the exe file -->
-                            <icon>src/main/resources/${app.name}.ico</icon>
-                            <!-- The version information to display for the exe file -->
-                            <versionInfo>
-                                <fileVersion>${app.version}</fileVersion>
-                                <txtFileVersion>${app.version}</txtFileVersion>
-                                <fileDescription>一些好用的windows 小工具</fileDescription>
-                                <productVersion>${app.version}</productVersion>
-                                <txtProductVersion>${app.version}</txtProductVersion>
-                                <productName>${app.name}</productName>
-                                <internalName>${app.name}</internalName>
-                                <originalFilename>${app.name}-cli-${app.version}.exe</originalFilename>
-                                <companyName>${groupId}</companyName>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>gui</id>
                         <phase>package</phase>
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
+                            <headerType>console</headerType>
                             <!-- The name of the exe file to create -->
-                            <outfile>target/${artifactId}${app.version}.exe</outfile>
+                            <outfile>target/${artifactId}-gui-${app.version}.exe</outfile>
                             <!-- The name of the jar file to wrap -->
                             <jar>target/${artifactId}-${version}.jar</jar>
                             <classPath>
                                 <mainClass>${gui.class}</mainClass>
-                                <addDependencies>false</addDependencies>
-                                <preCp>anything</preCp>
+                                <addDependencies>true</addDependencies>
+                                <preCp>lib/*.jar</preCp>
                             </classPath>
                             <!-- The minimum JRE version required -->
                             <jre>
                                 <minVersion>1.8.0</minVersion>
                             </jre>
                             <!-- The icon file to use for the exe file -->
-                            <icon>src/main/resources/${app.name}.ico</icon>
+                            <icon>src/main/resources/static/${app.name}.ico</icon>
                             <!-- The version information to display for the exe file -->
                             <versionInfo>
                                 <fileVersion>${app.version}</fileVersion>
                                 <txtFileVersion>${app.version}</txtFileVersion>
-                                <fileDescription>一些好用的windows 小工具</fileDescription>
+                                <fileDescription>useful kit</fileDescription>
                                 <productVersion>${app.version}</productVersion>
                                 <txtProductVersion>${app.version}</txtProductVersion>
                                 <productName>${app.name}</productName>
                                 <internalName>${app.name}</internalName>
-                                <originalFilename>${app.name}${app.version}_gui.exe</originalFilename>
+                                <originalFilename>${app.name}${app.version}-gui.exe</originalFilename>
+                                <companyName>${groupId}</companyName>
+                            </versionInfo>
+
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cli</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <!-- The name of the exe file to create -->
+                            <outfile>target/${artifactId}-cli-${app.version}.exe</outfile>
+                            <!-- The name of the jar file to wrap -->
+                            <jar>target/${artifactId}-${version}.jar</jar>
+                            <classPath>
+                                <mainClass>${cli.class}</mainClass>
+                                <addDependencies>true</addDependencies>
+                                <preCp>lib/*.jar</preCp>
+                            </classPath>
+                            <!-- The minimum JRE version required -->
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                            </jre>
+                            <!-- The icon file to use for the exe file -->
+                            <icon>src/main/resources/static/cli.ico</icon>
+                            <!-- The version information to display for the exe file -->
+                            <versionInfo>
+                                <fileVersion>${app.version}</fileVersion>
+                                <txtFileVersion>${app.version}</txtFileVersion>
+                                <fileDescription>useful kit</fileDescription>
+                                <productVersion>${app.version}</productVersion>
+                                <txtProductVersion>${app.version}</txtProductVersion>
+                                <productName>${app.name}</productName>
+                                <internalName>${app.name}</internalName>
+                                <originalFilename>${app.name}${app.version}-cli.exe</originalFilename>
                                 <companyName>${groupId}</companyName>
                             </versionInfo>
 
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <compress>true</compress>
-                    </archive>
-                </configuration>
             </plugin>
             <!--            &lt;!&ndash; 使用maven-dependency-plugin来分析项目的依赖 &ndash;&gt;-->
             <plugin>
@@ -359,17 +311,50 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.2.0</version>
                 <executions>
+                    <!--                    <execution>-->
+                    <!--                        <id>analyze</id>-->
+                    <!--                        <goals>-->
+                    <!--                            <goal>analyze-only</goal>-->
+                    <!--                        </goals>-->
+                    <!--                        <configuration>-->
+                    <!--                            <failOnWarning>true</failOnWarning>-->
+                    <!--                        </configuration>-->
+                    <!--                    </execution>-->
                     <execution>
-                        <id>analyze</id>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
                         <goals>
-                            <goal>analyze-only</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <failOnWarning>true</failOnWarning>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <!--                            <includeArtifactIds>stanford-corenlp</includeArtifactIds>-->
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>app</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
