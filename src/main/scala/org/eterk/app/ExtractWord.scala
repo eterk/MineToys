@@ -159,13 +159,19 @@ object ExtractWord extends App {
    */
   override def appKey: String = "ew"
 
-  override def paramTypeSeq: Seq[String] = Seq("FILE_DIR:txt", "RADIO:1000,2000,3000", "DIR", "TEXT", "INT")
+  val availableType: Seq[String] = Seq("txt", "markdown", "md")
+
+  override def paramTypeSeq: Seq[String] = Seq("FILE_DIR:" + availableType.mkString(","), "RADIO:1000,2000,3000", "DIR", "TEXT", "INT")
 
   override def execute(params: String*): Unit = {
 
     val Seq(txtFileDir, wordFre, outputDir, outputName, limit) = params
+    val filter =
+      availableType.map(x => {
+        case str: String if str.endsWith(x) => true
+      }: PartialFunction[String, Boolean]).reduce(_ orElse _)
 
-    val files: Seq[String] = Util.filterFiles(txtFileDir, _.endsWith("txt"), recursive = false)
+    val files: Seq[String] = Util.filterFiles(txtFileDir, filter, recursive = false)
 
 
     val text: String = Util.concatFiles(files, "utf-8")

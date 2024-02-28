@@ -4,7 +4,7 @@ import com.osinka.i18n.Lang
 
 object LanguageSetting {
 
-  private var lang_ = Lang("en")
+  private var lang_ = Lang("zh")
 
   implicit var langeImp: Lang = lang
 

@@ -1,14 +1,18 @@
 package org.eterk.gui
 
 
-import org.eterk.app.App
-import org.eterk.gui.input.CollectionPanel.{BorderType, CellTheme}
-import org.eterk.gui.input.{CollectionPanel, EMPTYInputPanel, InputPanel}
+import io.github.eterk.elements.seqPanel
+import io.github.eterk.mian.{ComponentWrapper, GuiTheme}
+import io.github.eterk.mian.input.SeqPanel.{BorderType, CellTheme}
+import io.github.eterk.mian.input.{EMPTYInputPanel, InputPanel, SeqPanel}
+
+
+import org.eterk.app.TypedApp
 import org.eterk.util.Logger
 
 import java.awt.{Color, Dimension}
-import scala.swing.event._
 import scala.swing._
+import scala.swing.event._
 import scala.util.Try
 import scala.util.control.NonFatal
 
@@ -42,7 +46,7 @@ object AppRowPanel extends Logger {
       }
     }
 
-  private def paramCol(app: App,
+  private def paramCol(app: TypedApp[_],
                        maxParamLength: Int,
                        cellDimeIn: Seq[Dimension],
                        orientation: Orientation.Value): ComponentWrapper = new ComponentWrapper {
@@ -111,13 +115,13 @@ object AppRowPanel extends Logger {
 
       }
 
-      CollectionPanel(cells :+ action, cellDimeIn, orientation)
+      seqPanel(cells :+ action, cellDimeIn, orientation)
 
     }
 
   }
 
-  def apply(app: App, index: Int, maxParamLength: Int): CollectionPanel = {
+  def apply(app: TypedApp[_], index: Int, maxParamLength: Int): SeqPanel = {
 
 
     val weight = Seq(3, 7)
@@ -126,9 +130,9 @@ object AppRowPanel extends Logger {
 
     val orientation: Orientation.Value = Orientation.Horizontal
 
-    val cellDimOut: Seq[Dimension] = CollectionPanel.getDimension(weight, dim, orientation)
+    val cellDimOut: Seq[Dimension] = SeqPanel.getDimension(weight, dim, orientation)
 
-    val cellDimeIn: Seq[Dimension] = CollectionPanel.getDimension(Seq.fill(maxParamLength + 1)(1), cellDimOut(1), orientation)
+    val cellDimeIn: Seq[Dimension] = SeqPanel.getDimension(Seq.fill(maxParamLength + 1)(1), cellDimOut(1), orientation)
 
     val first = titleCol(index, app.appName, app.appDescription)
     val second = paramCol(app, maxParamLength, cellDimeIn, orientation)
@@ -136,7 +140,7 @@ object AppRowPanel extends Logger {
 
     val theme = CellTheme(new Dimension(50, 50), new Dimension(3, 3), new Color(220, 220, 220) :: Nil, BorderType.EMPTY)
 
-    CollectionPanel(Seq(first, second), cellDimOut, orientation)(theme)
+    SeqPanel(Seq(first, second), cellDimOut, orientation)(theme)
 
   }
 

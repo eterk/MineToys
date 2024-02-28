@@ -8,14 +8,24 @@ import java.io.{File, FileInputStream, FileOutputStream}
 import java.nio.ByteBuffer
 import scala.language.implicitConversions
 
-object SplitWav extends App {
+object SplitWav extends TypedApp[String] {
+  def getDirAndType(file: File): (String, String) = {
+    if (!file.isFile) throw new IllegalAccessError("")
+    val nameWithType = file.getName
+    val (name, tpe) = nameWithType.splitAt(nameWithType.lastIndexOf("."))
+    val dir = new File(file.getParent + "/" + name)
+    if (!dir.exists())
+      dir.mkdir()
+
+    (dir.getAbsolutePath, tpe)
+  }
 
   //一个将字符串转换成16进制字符串
 
   // 定义一个函数，接受一个音频文件的路径，一个分割的时间间隔（以秒为单位），以及音频的采样率，声道数，比特率和编码格式作为参数
   def splitAudioFile(filePath: String,
                      interval: Int,
-                     audioAttribute: AudioAttribute): Unit = {
+                     audioAttribute: AudioAttribute): String = {
     // 打开文件输入流和通道
     val file = new File(filePath)
     val fis = new FileInputStream(file)
@@ -44,11 +54,18 @@ object SplitWav extends App {
     val header = new Array[Byte](headerSize)
     fis.read(header)
 
-    val name: String => String = Util.appendSuffix(file, _)
+    println(file.getName.lastIndexOf("."))
+
+
+    val (dir, tpe) = getDirAndType(file)
+
+
+    val name: String => String = dir + "/" + _ + tpe
 
     val bytesPerFile = audioAttribute.bytesPerFile(interval)
 
     var fileIndex = 1
+
     Range(0, fc.size.toInt, bytesPerFile)
       .foreach { _ =>
         // 创建一个新的文件输出流和通道，用来写入分割文件
@@ -83,6 +100,7 @@ object SplitWav extends App {
     // 关闭文件输入流和通道
     fis.close()
     fc.close()
+    dir
   }
 
   implicit def stringToMutimediaObj(path: String): MultimediaObject = new MultimediaObject(new File(path))
@@ -96,9 +114,9 @@ object SplitWav extends App {
 
   override def appKey: String = "sw"
 
-  override def paramTypeSeq: Seq[String] = Seq("DIR:wav", "INT")
+  override def paramTypeSeq: Seq[String] = Seq("FILE:wav", "INT")
 
-  override def execute(params: String*): Unit = {
+  override def execute(params: String*): String = {
 
     val path = params(0)
 
@@ -107,7 +125,6 @@ object SplitWav extends App {
 
 
     splitAudioFile(path, secondInterval, get(path))
-
 
   }
 }

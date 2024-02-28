@@ -1,9 +1,10 @@
 package org.eterk.gui
 
 import com.osinka.i18n.Lang
+import io.github.eterk.mian.ComponentWrapper
+import io.github.eterk.mian.input._
 import org.apache.commons.imaging.Imaging
 import org.eterk.{AppFactory, Resource}
-import org.eterk.gui.input.{CollectionPanel, RadioButtonInput, StatusIndicator}
 import org.eterk.server.FunasrService
 import org.eterk.util.{Config, LanguageSetting, Logger}
 
@@ -65,11 +66,12 @@ object HeadPanel extends BoxPanel(Orientation.Horizontal) {
 
   val debug: RadioButtonInput = RadioButtonInput("debug", Seq("开启", "关闭"), x => Logger.setDebug(if (x == "开启") true else false))
 
-  val funasr: ComponentWrapper = new ComponentWrapper {
-    override def component: Component = StatusIndicator("Funasr", () => FunasrService.service.status(), 5000)
-  }
+  import io.github.eterk.elements.{wrapper, seqPanel}
 
-  val elements: CollectionPanel = CollectionPanel(Seq(group, language, debug, funasr, versionLabel), new Dimension(20, 50), Orientation.Horizontal)
+  val funasr: ComponentWrapper = wrapper(StatusIndicator("Funasr", () => FunasrService.service.status(), 5000))
+
+
+  val elements = seqPanel(Seq(group, language, debug, funasr, versionLabel), new Dimension(20, 40), Orientation.Horizontal)
 
 
   contents += elements

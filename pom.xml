@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.eterk</groupId>
+    <groupId>org.git</groupId>
     <artifactId>mineToys</artifactId>
     <version>1.0</version>
 
@@ -24,26 +24,26 @@
 
 
     <repositories>
-        <!--    <repository>-->
-        <!--            <id>central</id>-->
-        <!--            <url>https://repo.maven.apache.org/maven2</url>-->
-        <!--        </repository>-->
-        <!--    <repository>-->
-        <!--      <id>clojars</id>-->
-        <!--      <url>https://clojars.org/repo/</url>-->
-        <!--    </repository>-->
-        <!--        <repository>-->
-        <!--            <id>jitpack.io</id>-->
-        <!--            <url>https://jitpack.io</url>-->
-        <!--        </repository>-->
-        <!--        <repository>-->
-        <!--            <id>jitpack.iox</id>-->
-        <!--            <url>https://www.dcm4che.org/maven2/</url>-->
-        <!--        </repository>-->
-        <!--    <repository>-->
-        <!--      <id>xuggle repo</id>-->
-        <!--      <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>-->
-        <!--    </repository>-->
+            <repository>
+                    <id>central</id>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                </repository>
+            <repository>
+              <id>clojars</id>
+              <url>https://clojars.org/repo/</url>
+            </repository>
+                <repository>
+                    <id>jitpack.io</id>
+                    <url>https://jitpack.io</url>
+                </repository>
+                <repository>
+                    <id>jitpack.iox</id>
+                    <url>https://www.dcm4che.org/maven2/</url>
+                </repository>
+            <repository>
+              <id>xuggle repo</id>
+              <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+            </repository>
     </repositories>
 
 
@@ -59,6 +59,11 @@
             <artifactId>scala-compiler</artifactId>
             <version>${scala.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.eterk</groupId>
+            <artifactId>mian</artifactId>
+            <version>0.1</version>
+        </dependency>
 
         <!--        <dependency>-->
         <!--            <groupId>org.scala-lang</groupId>-->
@@ -71,6 +76,12 @@
         <!--            <version>${scala.version}</version>-->
         <!--        </dependency>-->
         <!--        use in icon colorful-->
+        <!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.8.0</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-imaging</artifactId>
@@ -135,11 +146,11 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest -->
         <!-- https://mvnrepository.com/artifact/net.sf.image4j/image4j -->
-        <dependency>
-            <groupId>net.sf.image4j</groupId>
-            <artifactId>image4j</artifactId>
-            <version>0.7.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.sf.image4j</groupId>-->
+<!--            <artifactId>image4j</artifactId>-->
+<!--            <version>0.7.2</version>-->
+<!--        </dependency>-->
 
 
         <dependency>

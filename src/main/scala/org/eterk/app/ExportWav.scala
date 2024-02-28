@@ -6,7 +6,7 @@ import scala.language.implicitConversions
 
 import java.io.File
 
-object ExportWav extends App {
+object ExportWav extends TypedApp[Seq[String]] {
 
 
   import ws.schild.jave._
@@ -57,20 +57,44 @@ object ExportWav extends App {
 
   override def paramTypeSeq: Seq[String] = Seq("FILE_DIR:mp4,wmv", "INT")
 
-  override def execute(params: String*): Unit = {
+  override def execute(params: String*): Seq[String] = {
 
     val res: Seq[String] =
       Util
         .filterFiles(params.head, x => x.endsWith(".mp4") || x.endsWith("wmv"), recursive = false)
         .map(mp4ToWav)
 
-
-    if (params(1) != "_") {
-      res.foreach {
-        path =>
-          SplitWav.execute(path, params(1))
+    val splitPart =
+      if (params(1) != "_") {
+        res.map {
+          path =>
+            SplitWav.execute(path, params(1))
+        }
+      } else {
+        Nil
       }
+
+
+    if (res.size != splitPart.size) {
+      res
+    } else {
+
+      res.zip(splitPart)
+        .map {
+          case (wav, dir) =>
+            val dirFile = new File(dir)
+            if (dirFile.listFiles().length == 1) {
+              msg(s"${dirFile.getAbsolutePath} delete:   ${dirFile.delete()}")
+              wav
+            } else {
+              val wavFile = new File(wav)
+              msg(s"${wavFile.getAbsolutePath} delete:   ${wavFile.delete()}")
+              dir
+            }
+        }
+
     }
+
   }
 
 }

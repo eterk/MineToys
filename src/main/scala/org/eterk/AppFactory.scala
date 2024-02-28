@@ -1,10 +1,12 @@
 package org.eterk
 
 import com.osinka.i18n.Messages
-import org.eterk.util.{Config, Logger}
+import org.eterk.app.TypedApp
+import org.eterk.util.Logger
 
 
 object AppFactory extends Logger {
+  type App = TypedApp[_]
 
   import org.eterk.app._
 

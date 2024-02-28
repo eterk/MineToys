@@ -1,6 +1,6 @@
 package org.eterk
 
-import app.App
+import app.{App, TypedApp}
 import com.osinka.i18n.{Lang, Messages}
 import org.eterk.util.{Config, LanguageSetting, Logger}
 
@@ -14,11 +14,11 @@ object Main extends Logger {
   import LanguageSetting._
 
   // 定义一个方法，根据应用程序的名称，找到对应的应用程序实例
-  private def findApp(name: String): Option[App] = {
+  private def findApp(name: String): Option[TypedApp[_]] = {
     AppFactory.availableApp.find(_.appKey == name)
   }
 
-  private def listApp(app: Seq[App]): Unit = {
+  private def listApp(app: Seq[TypedApp[_]]): Unit = {
     app
       .zipWithIndex
       .foreach {

@@ -6,7 +6,7 @@ import org.eterk.util.Logger
 
 import scala.annotation.varargs
 
-trait App extends Logger {
+trait TypedApp[T] extends Logger {
 
   import org.eterk.util.LanguageSetting._
 
@@ -29,7 +29,6 @@ trait App extends Logger {
   def appDescription: String = Messages(s"${appKey}.desc")
 
   @varargs
-  def execute(params: String*): Unit
+  def execute(params: String*): T
 
 }
-
