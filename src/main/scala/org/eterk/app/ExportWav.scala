@@ -1,9 +1,9 @@
 package org.eterk.app
 
 import org.eterk.util.{AudioAttribute, Util}
+import ws.schild.jave.encode.{AudioAttributes, EncodingAttributes}
 
 import scala.language.implicitConversions
-
 import java.io.File
 
 object ExportWav extends TypedApp[Seq[String]] {
@@ -24,6 +24,19 @@ object ExportWav extends TypedApp[Seq[String]] {
    * 编码格式：建议使用 PCM，MP3，M4A，FLAC 等无损或有损压缩的编码格式，不支持 AMR，WMA，OGG 等其他编码格式。
    */
   private val funasr: AudioAttribute = AudioAttribute(16000, 1, 16, "pcm_s16le")
+  import ws.schild.jave.process.ProcessLocator
+  import ws.schild.jave.process.ProcessWrapper
+
+  // 没有起作用
+  class CustomFFMPEGLocator extends ProcessLocator {
+    override def getExecutablePath: String = {
+      "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-7.0.2-essentials_build\\bin\\ffmpeg.exe"
+    }
+
+    override def createExecutor(): ProcessWrapper = {
+      new ProcessWrapper(getExecutablePath)
+    }
+  }
 
 
   // 定义一个函数，接受一个mp4文件名，返回一个wav文件名
@@ -37,14 +50,17 @@ object ExportWav extends TypedApp[Seq[String]] {
 
     // 创建一个编码属性对象，设置格式为wav，设置音频属性
     val attrs = new EncodingAttributes()
-    attrs.setFormat("wav")
+//    attrs.setFormat("wav")
+// 手动添加需要的同名的fmpeg .exe 到指定目录
+    attrs.setOutputFormat("wav")
 
     attrs.setAudioAttributes(funasr.create())
     // 创建一个编码器对象
-    val encoder = new Encoder()
+
     // 调用编码器的encode方法，将源文件转换为目标文件，使用编码属性
     val media = new MultimediaObject(source)
 
+    val encoder = new Encoder(new CustomFFMPEGLocator())
 
     encoder.encode(media, target, attrs)
 

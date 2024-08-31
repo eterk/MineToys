@@ -60,11 +60,11 @@ object HeadPanel extends BoxPanel(Orientation.Horizontal) {
     }
 
 
-  val group: RadioButtonInput = RadioButtonInput("group", AppFactory.appGroup.keySet.toSeq, MainPage.groupCall)
+  val group = RadioButtonInput("group", AppFactory.appGroup.keySet.toSeq, MainPage.groupCall)
 
-  val language: RadioButtonInput = RadioButtonInput("language", Seq("en", "zh"), MainPage.langCall)
+  val language = RadioButtonInput("language", Seq("en", "zh"), MainPage.langCall)
 
-  val debug: RadioButtonInput = RadioButtonInput("debug", Seq("开启", "关闭"), x => Logger.setDebug(if (x == "开启") true else false))
+  val debug= RadioButtonInput("debug", Seq("开启", "关闭"), x => Logger.setDebug(if (x == "开启") true else false))
 
   import io.github.eterk.elements.{wrapper, seqPanel}
 

@@ -19,8 +19,14 @@ protected[server] case class FunasrContainerService(containerName: String,
   }
 
   def pathToVolume(path: String): String = {
+    println(path)
     if (pathIsIn(path)) {
+      val res=
       path.replaceFirst(linuxPath, volumePath)
+      println(path)
+      println(linuxPath)
+      println(volumePath)
+      res
     } else {
       throw new IllegalAccessError(path)
     }

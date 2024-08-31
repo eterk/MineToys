@@ -13,7 +13,7 @@ class ImageConvertTest extends AnyFunSuiteLike {
 
   test("das"){
 
-    GradientIcon.execute("S:\\util\\icon\\disk_c\\a","S:\\util\\pic\\ao","2,3,4","45,90")
+    GradientIcon.execute("S:\\util\\clip","S:\\util\\pic\\color_design","2,3,4","45,90")
   }
 
 }

@@ -1,6 +1,6 @@
 package org.eterk.util
 
-import ws.schild.jave.AudioAttributes
+import ws.schild.jave.encode.AudioAttributes
 
 
 case class AudioAttribute(sampleRate: Int,

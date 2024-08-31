@@ -32,12 +32,12 @@ object AppRowPanel extends Logger {
           nameLabel.font = GuiTheme.FontConfig.h1
 
           //创建一个appDescription标签，显示app的description，设置字体为普通，大小为12
-          val descLabel = new Label(desc)
-          descLabel.font = GuiTheme.FontConfig.h2
+//          val descLabel = new Label(desc)
+//          descLabel.font = GuiTheme.FontConfig.h2
 
           //将appName标签和appDescription标签添加到描述面板中
           contents += nameLabel
-          contents += descLabel
+//          contents += descLabel
         }
 
         //创建一个appName标签，显示app的name和index，设置字体为粗体，大小为16
